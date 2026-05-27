@@ -142,6 +142,7 @@ export function Book() {
                 readingPage !== null &&
                 ((i === readingPage - 1 && readingPage > 0) || i === readingPage)
               }
+              subPeeled={readingPage !== null && i === readingPage + 1 && i < NUM_PAGES}
               hovered={
                 readingPage !== null &&
                 ((i === readingPage - 1 && readingPage > 0 && hoveredSide === "left") ||

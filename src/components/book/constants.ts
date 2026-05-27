@@ -62,6 +62,11 @@ export const READING_SCENE_TILT_X = 6;
  *  mode — subtle enough that you can just barely see the page behind them. */
 export const PAGE_BASE_PEEL_DEG = 14;
 
+/** Smaller peel applied to the page directly behind the about-to-flip page,
+ *  creating a visible two-layer cascade on the right side that mirrors the
+ *  cover-behind-page-0 effect on the left side. */
+export const PAGE_SUB_PEEL_DEG = 7;
+
 /** Additional rotateY peel on top of PAGE_BASE_PEEL_DEG when the user hovers,
  *  giving a stronger "ready to flip" signal. */
 export const PAGE_HOVER_PEEL_DEG = 14;

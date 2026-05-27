@@ -9,6 +9,7 @@ import {
   PAGE_BASE_PEEL_DEG,
   PAGE_FAN_SPREAD,
   PAGE_HOVER_PEEL_DEG,
+  PAGE_SUB_PEEL_DEG,
   PAGE_Z_STEP,
 } from "./constants";
 
@@ -23,11 +24,14 @@ type Props = {
   readingPage: number | null;
   /** True when this page should show the base reading-mode peel (always-on). */
   peeled: boolean;
+  /** True when this page is directly behind the about-to-flip page — gets a
+   *  smaller peel so it visibly peeks out from behind. */
+  subPeeled: boolean;
   /** True when additionally hovered — adds extra peel on top of the base. */
   hovered: boolean;
 };
 
-export function Page({ index, openness, readingPage, peeled, hovered }: Props) {
+export function Page({ index, openness, readingPage, peeled, subPeeled, hovered }: Props) {
   const fanFraction = (index + 1) / (NUM_PAGES + 1);
   const finalAngle = -PAGE_FAN_SPREAD * fanFraction;
 
@@ -60,13 +64,16 @@ export function Page({ index, openness, readingPage, peeled, hovered }: Props) {
 
   useEffect(() => {
     let target = 0;
-    if (readingPage !== null && peeled) {
-      const deg = hovered ? PAGE_HOVER_PEEL_DEG : PAGE_BASE_PEEL_DEG;
-      target = index < readingPage ? deg : -deg;
+    if (readingPage !== null) {
+      let deg = 0;
+      if (hovered) deg = PAGE_HOVER_PEEL_DEG;
+      else if (peeled) deg = PAGE_BASE_PEEL_DEG;
+      else if (subPeeled) deg = PAGE_SUB_PEEL_DEG;
+      if (deg !== 0) target = index < readingPage ? deg : -deg;
     }
     const controls = animate(hoverPeel, target, { type: "spring", stiffness: 220, damping: 22 });
     return () => controls.stop();
-  }, [peeled, hovered, readingPage, index, hoverPeel]);
+  }, [peeled, subPeeled, hovered, readingPage, index, hoverPeel]);
 
   // In reading mode, reverse Z-ordering for the right stack so readingPage sits
   // on top. Without this, readingPage has the lowest Z and its peel disappears
