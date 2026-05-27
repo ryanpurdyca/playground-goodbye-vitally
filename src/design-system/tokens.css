@@ -1,0 +1,52 @@
+/**
+ * Design tokens — the single source of truth for color, spacing, radius,
+ * motion, and typography in the app. Components MUST consume these via
+ * Tailwind utility classes (e.g. `bg-surface`, `text-ink`) or via the
+ * `var(--token-name)` CSS custom property. Never hard-code raw hex values
+ * or pixel measurements in components.
+ *
+ * Token naming convention:
+ *   --color-{role}            semantic role (surface, ink, accent…)
+ *   --color-{role}-{variant}  variant of role (ink-muted, accent-soft…)
+ *
+ * To add a new color: define it under `:root`, then expose it to Tailwind
+ * via the matching `--color-*` entry in `@theme inline` (see globals.css).
+ */
+
+:root {
+  /* Surfaces & ink */
+  --color-canvas: #f4f6fb;
+  --color-surface: #ffffff;
+  --color-surface-raised: #fdfdff;
+  --color-ink: #0b0d12;
+  --color-ink-muted: #5b6478;
+  --color-ink-subtle: #9aa3b8;
+
+  /* Accent (book outline / primary brand) */
+  --color-accent: #3b5bff;
+  --color-accent-strong: #2a44e0;
+  --color-accent-soft: #c9d2ff;
+
+  /* Page paper (the inside pages of the book) */
+  --color-paper: #ffffff;
+  --color-paper-edge: #e6eaf5;
+  --color-paper-shadow: rgba(11, 13, 18, 0.08);
+
+  /* Radii */
+  --radius-xs: 4px;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 18px;
+
+  /* Spacing scale uses Tailwind's defaults; book-specific dims live here. */
+  --book-width: 320px;
+  --book-height: 440px;
+  --book-spine: 14px;
+
+  /* Motion */
+  --ease-out-soft: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --ease-page: cubic-bezier(0.45, 0.05, 0.25, 1);
+  --duration-fast: 160ms;
+  --duration-base: 320ms;
+  --duration-slow: 640ms;
+}
