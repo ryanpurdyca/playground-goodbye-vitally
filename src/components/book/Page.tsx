@@ -2,36 +2,38 @@
 
 import { motion, type MotionValue, useTransform } from "framer-motion";
 import { cn } from "@/design-system";
-import { NUM_PAGES, PAGE_FAN_SPREAD, PAGE_Z_STEP } from "./constants";
+import { COVER_OPEN_ANGLE, NUM_PAGES, PAGE_FAN_SPREAD, PAGE_Z_STEP } from "./constants";
 
 type Props = {
   /** 0 = innermost page (against the back cover), NUM_PAGES-1 = outermost (just inside the front cover). */
   index: number;
   openness: MotionValue<number>;
+  /**
+   * null  → idle fan mode, rotateY driven by the openness spring.
+   * number → reading mode; pages with index < readingPage flip to the left
+   *          (COVER_OPEN_ANGLE) and pages with index >= readingPage sit flat at 0°.
+   */
+  readingPage: number | null;
 };
 
 /**
- * A single hinged page. Pages stagger their opening so that the cover lifts
- * first; the outermost page follows just behind the cover, and each page
- * inward lags a little more. At full openness, pages settle into a fan whose
- * outer edge approaches the cover's open angle and whose innermost page
- * barely lifts off the back cover — matching the reference fan-of-pages.
+ * A single hinged page. In idle mode pages stagger their opening so that the
+ * cover lifts first. In reading mode each page either sits flat on the right
+ * (unread) or has flipped to the left (read), animated with a spring so that
+ * clicking Next/Back produces a realistic single-page turn.
  */
-export function Page({ index, openness }: Props) {
-  // Higher index = more outward = opens earlier and farther.
+export function Page({ index, openness, readingPage }: Props) {
   const fanFraction = (index + 1) / (NUM_PAGES + 1);
   const finalAngle = -PAGE_FAN_SPREAD * fanFraction;
 
-  // Pages start lifting just after the cover begins, with the outermost page
-  // leading and each inner page lagging slightly. All complete by openness = 1
-  // so the fan is fully spread at the leftmost cursor position.
   const opensAt = 0.1 + (1 - fanFraction) * 0.5;
-  const rotateY = useTransform(openness, [opensAt, 1], [0, finalAngle], { clamp: true });
+  const idleRotateY = useTransform(openness, [opensAt, 1], [0, finalAngle], { clamp: true });
 
   const translateZ = (index + 1) * PAGE_Z_STEP;
 
-  // Inner pages are slightly cooler/dimmer; outermost page picks up subtle accent edge.
   const isEdgePage = index === NUM_PAGES - 1;
+  const isReading = readingPage !== null;
+  const readTargetY = isReading ? (index < readingPage ? COVER_OPEN_ANGLE : 0) : 0;
 
   return (
     <motion.div
@@ -46,8 +48,12 @@ export function Page({ index, openness }: Props) {
         transformOrigin: "0% 50%",
         transformStyle: "preserve-3d",
         translateZ,
-        rotateY,
+        // In reading mode rotateY is driven by `animate` below; removing it
+        // from `style` prevents the MotionValue and animate from conflicting.
+        ...(isReading ? {} : { rotateY: idleRotateY }),
       }}
+      animate={isReading ? { rotateY: readTargetY } : undefined}
+      transition={isReading ? { type: "spring", stiffness: 140, damping: 24 } : undefined}
     >
       {/* Subtle gradient hints at page curvature without using an image. */}
       <div

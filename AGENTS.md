@@ -38,14 +38,16 @@ Browser
        └─ src/app/layout.tsx        Root layout (fonts, globals.css)
             └─ src/app/page.tsx     Server component, renders <Stage><Book /></Stage>
                  ├─ Stage           Full-viewport canvas (design system primitive)
-                 └─ Book            Client component — pointer-driven 3D scene
+                 └─ Book            Client component — pointer-driven 3D scene + reading state
                       ├─ BackCover
-                      ├─ Page[]     One per page; each hinges on the spine, staggered
-                      └─ Cover      Front cover; opens first, leads the fan
+                      ├─ Page[]     One per page; hinges on spine; fan or reading-flip animation
+                      ├─ Cover      Front cover; opens first, leads the fan
+                      └─ BookButtons Fades in with openness; Read/Cancel → Close/Next/Back
 ```
 
 - **Rendering boundary:** `page.tsx` is a server component. The `Book` component is `"use client"` (it needs pointer events and Framer Motion springs). Keep the boundary as deep into the tree as possible — only what genuinely needs interactivity should be client.
-- **Animation model:** Pointer X is captured by `Book.tsx` and written into a single `MotionValue` called `openness` (0 = closed, 1 = open). A spring (`useSpring`) smooths it. Every page and the cover derive their `rotateY` from this single source via `useTransform`. This means adding/removing pages or retuning the fan is a single-file change in `constants.ts`.
+- **Animation model:** Pointer X is captured by `Book.tsx` and written into a single `MotionValue` called `openness` (0 = closed, 1 = open). A spring (`useSpring`) smooths it. In _idle mode_ every page and the cover derive their `rotateY` from this source via `useTransform`. In _reading mode_ the book is pinned open and each `Page` switches to Framer Motion's `animate` prop, targeting either 0° (unread, right stack) or `COVER_OPEN_ANGLE` (read, left stack) — producing a single-page-turn effect on Next/Back.
+- **Book mode state machine:** `idle` → (Read clicked) → `reading` → (Close clicked) → `idle`. A `modeRef` mirrors the React state so the pointer-move event handler (registered once in `useEffect`) always sees the current mode without needing to re-register.
 - **3D model:** The scene has CSS `perspective` on the outer container. The book root has `transform-style: preserve-3d` and a static `rotateX/rotateZ` tilt. Every hinged element has `transform-origin: 0% 50%` (left edge) so they rotate around the spine. Small `translateZ` offsets prevent z-fighting when closed.
 
 ## 3. Technologies
@@ -82,10 +84,11 @@ src/
       HalftoneSquare.test.tsx
   components/                Feature compositions (not reusable primitives)
     book/
-      Book.tsx               Top-level interactive 3D scene
+      Book.tsx               Top-level scene + reading mode state machine
       Cover.tsx              Hinged front cover with face + inside surfaces
-      Page.tsx               Single hinged page
+      Page.tsx               Single hinged page (idle fan or reading-flip)
       BackCover.tsx          Static back cover
+      BookButtons.tsx        Fade-in Read/Cancel/Close/Next/Back button pair
       LeftPageText.tsx       Handwritten text behind the open cover (DOM-layered)
       constants.ts           All tunable layout/motion constants
       index.ts               Public barrel for the book feature
@@ -129,6 +132,13 @@ Append new entries at the bottom. Use the format: `### YYYY-MM-DD — Title`.
 - **`LeftPageText` component** (`src/components/book/LeftPageText.tsx`). Displays handwritten placeholder text centred in the area the front cover occupies when fully open. Positioned at `left: calc(50vw - var(--book-width))` so it aligns exactly with the open cover's footprint. Rendered before `<Book />` in DOM order so the 3D scene (including the swinging cover) paints over it. Uses `Caveat` Google Font via `next/font/google` (`variable: "--font-handwritten"`). Text is shifted left within the container via asymmetric padding (`pl-4 pr-28`) — `overflow-hidden` on the container guarantees it remains fully covered when open regardless of horizontal position.
 - **Cover occlusion fix.** `backfaceVisibility: "hidden"` must NOT be placed on the outer `preserve-3d` container of `Cover.tsx`. Doing so hides the _entire subtree_ — including `CoverInside` — once the container's backface faces the viewer (past −90°). Each child (`CoverFace`, `CoverInside`) carries its own `backfaceVisibility: "hidden"` to control visibility independently.
 
+### 2026-05-27 — Reading mode, page-flip, BookButtons
+
+- **Reading mode** adds a `mode: 'idle' | 'reading'` state to `Book.tsx`. In reading mode the pointer handler is bypassed (via `modeRef`) and `openness` is pinned at 1.
+- **Page flip animation**: `Page.tsx` accepts a `readingPage: number | null` prop. When null, `rotateY` is driven by the `useTransform` MotionValue (fan). When set, `rotateY` is removed from `style` and Framer Motion's `animate` prop takes over — pages with `index < readingPage` target `COVER_OPEN_ANGLE`, others target 0°. Removing the MotionValue from `style` is required; leaving it alongside `animate` causes conflicts in Framer Motion.
+- **`BookButtons`** (`src/components/book/BookButtons.tsx`) is a flat 2D overlay positioned outside the perspective container. Opacity is driven directly by the `smoothOpenness` MotionValue. `pointerEvents` toggles via React state updated with `useMotionValueEvent` above a 0.15 threshold so invisible buttons aren't clickable. Button labels and handlers derive from `mode` + `currentPage`.
+- **`Book` outer div is `absolute inset-0`**: changed from a flex child to a full-viewport absolute element so `BookButtons` can use `left: calc(50vw...)` positioning without being offset by the perspective container or the book's own dimensions.
+
 ## 6. Design system
 
 **Tokens** (`src/design-system/tokens.css`):
@@ -156,6 +166,7 @@ When you add a primitive or token, update this section and add it to the design-
 - **Framer Motion in Server Components** — Framer Motion components are client-only. The Book and its parts have `"use client"` directives; do not import them from a server component without that boundary.
 - **`transform-style: preserve-3d` is fragile** — if any ancestor sets `overflow: hidden` and doesn't also have `preserve-3d`, child rotations may clip. Stage uses `overflow-hidden` for layout; the perspective wrapper inside `Book.tsx` re-establishes the 3D context for the book itself.
 - **Pointer events with `passive: true`** — we register `pointermove` and `touchmove` as passive listeners since we never call `preventDefault`; this avoids the scroll-jank warning on touch devices.
+- **`next/font` variables need `@utility`, not `@theme inline`** — `@theme inline` resolves `var()` references at build time. Color tokens work because they're defined statically in `tokens.css`. Font variables injected by `next/font` at runtime are invisible to Tailwind's build step, so `@theme inline { --font-handwritten: var(--font-handwritten) }` generates no utility. Fix: use `@utility font-handwritten { font-family: var(--font-handwritten); }` in `globals.css` instead — this emits the rule directly and lets the CSS variable resolve at runtime from the `html` element.
 
 ## 8. Quality gates
 

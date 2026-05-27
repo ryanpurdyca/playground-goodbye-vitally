@@ -1,10 +1,11 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useMotionValue, useSpring } from "framer-motion";
 import { Cover } from "./Cover";
 import { Page } from "./Page";
 import { BackCover } from "./BackCover";
+import { BookButtons, type BookMode } from "./BookButtons";
 import {
   BOOK_WIDTH_PX,
   NUM_PAGES,
@@ -16,24 +17,33 @@ import {
 } from "./constants";
 
 /**
- * Interactive 3D book. The user's pointer X position drives the book's
- * `openness` value (0 = closed at the right edge of the viewport, 1 = open
- * at the left edge). A spring smooths the raw input so quick flicks settle
- * naturally instead of snapping.
+ * Interactive 3D book. Pointer X drives `openness` (0 = closed, 1 = open)
+ * while in idle mode. In reading mode the book is pinned open and Next/Back
+ * flip individual pages using Framer Motion's `animate` prop.
  *
- * The book is drawn entirely with CSS borders, gradients, and an SVG
- * halftone — no raster textures or imported images.
+ * The outer div is `absolute inset-0` so that BookButtons — which lives
+ * outside the perspective container — can use viewport-relative positioning
+ * without being affected by 3D transforms.
  */
 export function Book() {
   const openness = useMotionValue(0);
   const smoothOpenness = useSpring(openness, OPENNESS_SPRING);
 
+  const [mode, setMode] = useState<BookMode>("idle");
+  const [currentPage, setCurrentPage] = useState(0);
+  // Ref mirrors mode so the pointer-event handler always sees the current
+  // value without needing to re-register the listener on every mode change.
+  const modeRef = useRef<BookMode>("idle");
+
+  const setModeSync = (m: BookMode) => {
+    modeRef.current = m;
+    setMode(m);
+  };
+
   useEffect(() => {
     const setFromClientX = (clientX: number) => {
+      if (modeRef.current === "reading") return; // book is pinned open
       const w = window.innerWidth || 1;
-      // Fully closed when cursor reaches the right edge of the closed book;
-      // fully open when cursor reaches the left edge of the fully-open spread.
-      // Spine sits at screen centre (w/2), book extends ±BOOK_WIDTH_PX from it.
       const spineX = w / 2;
       const closeAt = spineX + BOOK_WIDTH_PX;
       const openAt = spineX - BOOK_WIDTH_PX;
@@ -55,31 +65,73 @@ export function Book() {
     };
   }, [openness]);
 
+  const handleRead = () => {
+    openness.set(1);
+    setCurrentPage(0);
+    setModeSync("reading");
+  };
+
+  const handleCancel = () => {
+    setModeSync("idle");
+  };
+
+  const handleNext = () => {
+    setCurrentPage((p) => Math.min(p + 1, NUM_PAGES - 1));
+  };
+
+  const handleBack = () => {
+    setCurrentPage((p) => Math.max(p - 1, 0));
+  };
+
+  const handleClose = () => {
+    setModeSync("idle");
+    setCurrentPage(0);
+    openness.set(0);
+  };
+
+  const readingPage = mode === "reading" ? currentPage : null;
+
   return (
-    <div
-      data-testid="book-root"
-      className="flex items-center justify-center"
-      style={{
-        perspective: `${SCENE_PERSPECTIVE_PX}px`,
-        perspectiveOrigin: "50% 45%",
-      }}
-    >
+    <div data-testid="book-root" className="absolute inset-0">
+      {/* 3D scene — centred within the viewport-filling wrapper */}
       <div
-        className="relative"
+        className="flex h-full items-center justify-center"
         style={{
-          width: "var(--book-width)",
-          height: "var(--book-height)",
-          left: OPEN_CENTRE_OFFSET,
-          transformStyle: "preserve-3d",
-          transform: `rotateX(${SCENE_TILT_X_DEG}deg) rotateZ(${SCENE_TILT_Z_DEG}deg)`,
+          perspective: `${SCENE_PERSPECTIVE_PX}px`,
+          perspectiveOrigin: "50% 45%",
         }}
       >
-        <BackCover />
-        {Array.from({ length: NUM_PAGES }, (_, i) => (
-          <Page key={i} index={i} openness={smoothOpenness} />
-        ))}
-        <Cover openness={smoothOpenness} />
+        <div
+          className="relative"
+          style={{
+            width: "var(--book-width)",
+            height: "var(--book-height)",
+            left: OPEN_CENTRE_OFFSET,
+            transformStyle: "preserve-3d",
+            transform: `rotateX(${SCENE_TILT_X_DEG}deg) rotateZ(${SCENE_TILT_Z_DEG}deg)`,
+          }}
+        >
+          <BackCover />
+          {Array.from({ length: NUM_PAGES }, (_, i) => (
+            <Page key={i} index={i} openness={smoothOpenness} readingPage={readingPage} />
+          ))}
+          <Cover openness={smoothOpenness} />
+        </div>
       </div>
+
+      {/* 2D button overlay — outside the perspective container so it isn't
+          affected by 3D transforms. Absolutely positioned using vw/vh so it
+          aligns with the open book spread regardless of viewport size. */}
+      <BookButtons
+        openness={smoothOpenness}
+        mode={mode}
+        currentPage={currentPage}
+        onRead={handleRead}
+        onCancel={handleCancel}
+        onNext={handleNext}
+        onBack={handleBack}
+        onClose={handleClose}
+      />
     </div>
   );
 }
