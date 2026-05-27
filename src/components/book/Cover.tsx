@@ -26,9 +26,9 @@ export function Cover({ openness }: Props) {
     <motion.div
       data-testid="book-cover"
       className={cn(
-        "border-accent bg-surface absolute inset-0",
-        "rounded-l-[8px] rounded-r-[10px] border-2",
-        "shadow-[0_18px_40px_-20px_var(--color-paper-shadow)]",
+        "bg-surface absolute inset-0",
+        "rounded-l-[8px] rounded-r-[10px]",
+        "shadow-[inset_0_0_0_2px_var(--color-accent),0_18px_40px_-20px_var(--color-paper-shadow)]",
       )}
       style={{
         transformOrigin: "0% 50%",

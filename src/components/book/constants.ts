@@ -59,13 +59,14 @@ export const OPEN_CENTRE_OFFSET = "calc(var(--book-width) / 2)";
 export const READING_SCENE_TILT_X = 6;
 
 /** Base rotateY peel (degrees) always present on about-to-flip pages in reading
- *  mode — subtle enough that you can just barely see the page behind them. */
-export const PAGE_BASE_PEEL_DEG = 14;
+ *  mode. Tuned so the right side exposes a similar chunk of next-page
+ *  (~19 units) as the left side does of cover-behind-page (~17 units). */
+export const PAGE_BASE_PEEL_DEG = 20;
 
 /** Smaller peel applied to the page directly behind the about-to-flip page,
  *  creating a visible two-layer cascade on the right side that mirrors the
  *  cover-behind-page-0 effect on the left side. */
-export const PAGE_SUB_PEEL_DEG = 7;
+export const PAGE_SUB_PEEL_DEG = 10;
 
 /** Additional rotateY peel on top of PAGE_BASE_PEEL_DEG when the user hovers,
  *  giving a stronger "ready to flip" signal. */
