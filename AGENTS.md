@@ -143,6 +143,7 @@ When you add a primitive or token, update this section and add it to the design-
 
 ## 7. Gotchas & lore
 
+- **`.claude/launch.json`** defines the dev server for the Claude Code preview tool (`preview_start "next-dev"`). It uses `npm --prefix see-you-sometime run dev` so it works from the parent `Development/` session root as well as from the project root directly.
 - **Next.js 16 strict ESLint** — the flat config in `eslint.config.mjs` chains `eslint-config-next/core-web-vitals` and `eslint-config-next/typescript`, then applies `eslint-config-prettier` last to disable conflicting stylistic rules.
 - **Framer Motion in Server Components** — Framer Motion components are client-only. The Book and its parts have `"use client"` directives; do not import them from a server component without that boundary.
 - **`transform-style: preserve-3d` is fragile** — if any ancestor sets `overflow: hidden` and doesn't also have `preserve-3d`, child rotations may clip. Stage uses `overflow-hidden` for layout; the perspective wrapper inside `Book.tsx` re-establishes the 3D context for the book itself.
