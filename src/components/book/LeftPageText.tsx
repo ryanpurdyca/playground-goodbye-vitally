@@ -7,11 +7,14 @@
  * open spread — with the same dimensions as the book itself so the cover
  * masks it perfectly at full openness.
  */
+
+const caveatStyle = { fontFamily: "var(--font-caveat)" } as const;
+
 export function LeftPageText() {
   return (
     <div
       aria-hidden
-      className="pointer-events-none absolute flex items-center justify-center overflow-hidden py-8 pr-28 pl-4"
+      className="pointer-events-none absolute flex flex-col justify-center overflow-hidden py-8 pr-16 pl-8"
       style={{
         left: "calc(50vw - var(--book-width))",
         top: "calc(50vh - var(--book-height) / 2)",
@@ -19,9 +22,21 @@ export function LeftPageText() {
         height: "var(--book-height)",
       }}
     >
-      <p className="font-handwritten text-ink-subtle text-center text-[2.1rem] leading-snug">
-        Sed ut perspiciatis unde omnis iste natus error sit voluptatem santium remque totam rem
-        aperiam
+      <p
+        className="text-ink mb-4 text-left text-[1.75rem] leading-snug font-bold"
+        style={caveatStyle}
+      >
+        Dear friends,
+      </p>
+      <p
+        className="text-ink mb-6 text-left text-[1.75rem] leading-snug font-bold"
+        style={caveatStyle}
+      >
+        Here&apos;s to a great four years of building, shipping, and laughing together. This is bye
+        for now, not forever. I&apos;ll see you sometime.
+      </p>
+      <p className="text-ink text-left text-[1.75rem] leading-snug font-bold" style={caveatStyle}>
+        — Ryan
       </p>
     </div>
   );

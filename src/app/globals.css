@@ -11,6 +11,10 @@
   font-family: var(--font-handwritten);
 }
 
+@utility font-caveat {
+  font-family: var(--font-caveat);
+}
+
 @theme inline {
   --color-canvas: var(--color-canvas);
   --color-surface: var(--color-surface);
@@ -23,6 +27,11 @@
   --color-accent-soft: var(--color-accent-soft);
   --color-paper: var(--color-paper);
   --color-paper-edge: var(--color-paper-edge);
+  --color-rule: var(--color-rule);
+  --color-gutter: var(--color-gutter);
+  --color-cover: var(--color-cover);
+  --color-cover-border-inner: var(--color-cover-border-inner);
+  --color-cover-ink: var(--color-cover-ink);
 
   --radius-xs: var(--radius-xs);
   --radius-sm: var(--radius-sm);

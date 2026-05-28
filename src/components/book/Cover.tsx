@@ -1,8 +1,14 @@
 "use client";
 
 import { motion, type MotionValue, useTransform } from "framer-motion";
-import { HalftoneSquare, cn } from "@/design-system";
+import { cn } from "@/design-system";
 import { COVER_OPEN_ANGLE, NUM_PAGES, PAGE_Z_STEP } from "./constants";
+
+const coverTextStyle = { fontFamily: "var(--font-caveat)" } as const;
+
+const coverTitleClass = cn(
+  "text-cover-ink absolute inset-x-0 text-center text-3xl leading-snug font-bold",
+);
 
 type Props = {
   openness: MotionValue<number>;
@@ -26,10 +32,10 @@ export function Cover({ openness }: Props) {
     <motion.div
       data-testid="book-cover"
       className={cn(
-        "bg-surface absolute inset-0",
+        "absolute inset-0 bg-cover",
         "rounded-[10px]",
-        "border-accent border",
-        "shadow-[0_18px_40px_-20px_var(--color-paper-shadow)]",
+        "border-ink border",
+        "shadow-[0_4px_12px_rgba(11,13,18,0.06),_0_20px_48px_rgba(11,13,18,0.12)]",
       )}
       style={{
         transformOrigin: "0% 50%",
@@ -40,7 +46,7 @@ export function Cover({ openness }: Props) {
     >
       <div
         aria-hidden
-        className="border-accent pointer-events-none absolute inset-[3px] rounded-[7px] border"
+        className="border-cover-border-inner pointer-events-none absolute inset-[3px] rounded-[7px] border"
       />
       <CoverFace />
       <CoverInside />
@@ -50,15 +56,34 @@ export function Cover({ openness }: Props) {
 
 function CoverFace() {
   return (
-    <div
-      className="absolute inset-0 flex flex-col items-center justify-center gap-7 px-6"
-      style={{ backfaceVisibility: "hidden" }}
-    >
-      <HalftoneSquare size={132} resolution={26} />
-      <div className="flex flex-col items-center gap-2">
-        <span className="text-ink text-2xl font-semibold tracking-tight">blank.</span>
-        <span className="text-ink-muted text-sm">Interactive 3D Book</span>
-      </div>
+    <div className="absolute inset-0" style={{ backfaceVisibility: "hidden" }}>
+      <img
+        src="/images/vitally-01.svg"
+        alt=""
+        width={166}
+        height={216}
+        className="absolute top-[7%] left-[9%] h-auto w-[26%] max-w-[94px] -rotate-6 select-none"
+        draggable={false}
+      />
+      <img
+        src="/images/vitally-02.svg"
+        alt=""
+        width={216}
+        height={155}
+        className="absolute right-[7%] bottom-[8%] h-auto w-[42%] max-w-[138px] rotate-[7deg] select-none"
+        draggable={false}
+      />
+      <p
+        className={cn(
+          coverTitleClass,
+          "top-1/2 left-1/2 w-full max-w-[85%] -translate-x-1/2 -translate-y-1/2 px-6",
+        )}
+        style={coverTextStyle}
+      >
+        Memories from
+        <br />
+        my time at Vitally
+      </p>
     </div>
   );
 }
@@ -66,7 +91,7 @@ function CoverFace() {
 function CoverInside() {
   return (
     <div
-      className="bg-surface-raised border-accent-soft absolute inset-0 rounded-[10px] border"
+      className="bg-surface-raised absolute inset-0 rounded-[10px]"
       style={{
         transform: "rotateY(180deg) translateZ(1px)",
         backfaceVisibility: "hidden",

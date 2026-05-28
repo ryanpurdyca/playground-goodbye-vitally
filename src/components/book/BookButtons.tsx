@@ -2,7 +2,7 @@
 
 import { AnimatePresence, motion, useMotionValueEvent, type MotionValue } from "framer-motion";
 import { useState } from "react";
-import { cn } from "@/design-system";
+import { Button } from "@/design-system";
 
 export type BookMode = "idle" | "reading";
 
@@ -50,51 +50,85 @@ export function BookButtons({
   }
 
   return (
-    <motion.div
-      className="absolute flex items-center justify-between"
-      style={{
-        left: "calc(50vw - var(--book-width))",
-        top: "calc(50vh + var(--book-height) / 2 + 52px)",
-        width: "calc(var(--book-width) * 2)",
-        opacity: openness,
-        pointerEvents: interactive ? "auto" : "none",
-      }}
-    >
-      {/* Left group — Back fades in once past page 0 */}
-      <div className="flex items-center gap-2">
-        <Btn onClick={isReading ? onNext : onRead}>Next</Btn>
-        <AnimatePresence>
-          {showBack && (
-            <motion.div
-              key="back"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.15 }}
-            >
-              <Btn onClick={onBack}>Back</Btn>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </div>
-
-      {/* Centered page label — only in reading mode */}
+    <>
+      {/* Book metadata labels — only visible in reading mode, fade with openness */}
       {isReading && (
-        <span className="text-accent absolute top-1/2 left-1/2 flex -translate-x-1/2 -translate-y-1/2 items-center font-mono text-sm">
-          <span>{pageWord}&nbsp;</span>
-          <AnimatedNumber value={pageLeft} dir={dir} />
-          {pageRight && (
-            <>
-              <span>-</span>
-              <AnimatedNumber value={pageRight} dir={dir} staggerOffset={1} />
-            </>
-          )}
-        </span>
+        <>
+          <motion.span
+            className="text-ink-subtle pointer-events-none absolute font-mono text-sm"
+            style={{
+              opacity: openness,
+              left: "calc(50vw - var(--book-width))",
+              top: "calc(50vh - var(--book-height) / 2 - 56px)",
+            }}
+          >
+            Ryan Purdy
+          </motion.span>
+          <motion.span
+            className="text-ink-subtle pointer-events-none absolute font-mono text-sm"
+            style={{
+              opacity: openness,
+              right: "calc(50vw - var(--book-width))",
+              top: "calc(50vh - var(--book-height) / 2 - 56px)",
+            }}
+          >
+            Spring 2026
+          </motion.span>
+        </>
       )}
 
-      {/* Right button */}
-      <Btn onClick={isReading ? onClose : onCancel}>Close</Btn>
-    </motion.div>
+      <motion.div
+        className="absolute flex items-center justify-between"
+        style={{
+          left: "calc(50vw - var(--book-width))",
+          top: "calc(50vh + var(--book-height) / 2 + 52px)",
+          width: "calc(var(--book-width) * 2)",
+          opacity: openness,
+          pointerEvents: interactive ? "auto" : "none",
+        }}
+      >
+        {/* Left group — Back fades in once past page 0 */}
+        <div className="flex items-center gap-2">
+          <Button variant="primary" onClick={isReading ? onNext : onRead}>
+            {isReading ? "Next" : "Open"}
+          </Button>
+          <AnimatePresence>
+            {showBack && (
+              <motion.div
+                key="back"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.15 }}
+              >
+                <Button variant="supporting" onClick={onBack}>
+                  Back
+                </Button>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
+
+        {/* Centered page label — only in reading mode */}
+        {isReading && (
+          <span className="text-ink-subtle absolute top-1/2 left-1/2 flex -translate-x-1/2 -translate-y-1/2 items-center font-mono text-sm">
+            <span>{pageWord}&nbsp;</span>
+            <AnimatedNumber value={pageLeft} dir={dir} />
+            {pageRight && (
+              <>
+                <span>-</span>
+                <AnimatedNumber value={pageRight} dir={dir} staggerOffset={1} />
+              </>
+            )}
+          </span>
+        )}
+
+        {/* Right button */}
+        <Button variant="secondary" onClick={isReading ? onClose : onCancel}>
+          Close
+        </Button>
+      </motion.div>
+    </>
   );
 }
 
@@ -172,20 +206,5 @@ function AnimatedNumber({
         ),
       )}
     </>
-  );
-}
-
-function Btn({ onClick, children }: { onClick: () => void; children: React.ReactNode }) {
-  return (
-    <button
-      onClick={onClick}
-      className={cn(
-        "cursor-pointer rounded-full border px-5 py-2 text-sm font-medium",
-        "border-accent/40 text-ink-muted bg-transparent",
-        "hover:border-accent hover:text-ink transition-colors duration-150",
-      )}
-    >
-      {children}
-    </button>
   );
 }

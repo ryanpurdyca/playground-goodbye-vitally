@@ -6,6 +6,7 @@ import { Cover } from "./Cover";
 import { Page } from "./Page";
 import { BackCover } from "./BackCover";
 import { BookButtons, type BookMode } from "./BookButtons";
+import { CursorFollower } from "./CursorFollower";
 import {
   BOOK_WIDTH_PX,
   NUM_PAGES,
@@ -29,8 +30,8 @@ export function Book() {
   const openness = useMotionValue(0);
   const smoothOpenness = useSpring(openness, OPENNESS_SPRING);
 
-  const baseTiltX = useTransform(smoothOpenness, [0, 1], [0, 12]);
-  const tiltZ = useTransform(smoothOpenness, [0, 1], [SCENE_TILT_Z_DEG, 0]);
+  const baseTiltX = useTransform(smoothOpenness, [0, 1], [0, 0]);
+  const tiltZ = useTransform(smoothOpenness, [0, 1], [0, 0]);
   // Snaps to -12 when entering reading mode to cancel baseTiltX, giving 0° total.
   const readingTiltX = useMotionValue(0);
   const tiltX = useTransform([baseTiltX, readingTiltX], ([b, r]) => (b as number) + (r as number));
@@ -38,6 +39,7 @@ export function Book() {
   const [mode, setMode] = useState<BookMode>("idle");
   const [currentPage, setCurrentPage] = useState(0);
   const [hoveredSide, setHoveredSide] = useState<"left" | "right" | null>(null);
+  const [hoveringBook, setHoveringBook] = useState(false);
   // True while the close sequence is running. Suppresses page peel so the
   // "about-to-flip" page doesn't stay tilted at -25° throughout the close and
   // then snap back to flat once mode finally flips to idle.
@@ -84,10 +86,13 @@ export function Book() {
 
   const handleRead = () => {
     openness.set(1);
+    // Directly drive smoothOpenness: useSpring tracking stalls when source jumps from 0.
+    animate(smoothOpenness, 1, { type: "spring", stiffness: 400, damping: 40 });
     setCurrentPageSync(0);
     setIsClosing(false);
+    setHoveringBook(false);
     setModeSync("reading");
-    animate(readingTiltX, READING_SCENE_TILT_X, { type: "spring", ...OPENNESS_SPRING });
+    animate(readingTiltX, 0, { type: "spring", ...OPENNESS_SPRING });
   };
 
   const handleCancel = () => {
@@ -181,6 +186,7 @@ export function Book() {
         style={{
           perspective: `${SCENE_PERSPECTIVE_PX}px`,
           perspectiveOrigin: "50% 45%",
+          pointerEvents: "none",
         }}
       >
         <motion.div
@@ -231,6 +237,8 @@ export function Book() {
             height: "var(--book-height)",
           }}
           onClick={handleRead}
+          onMouseEnter={() => setHoveringBook(true)}
+          onMouseLeave={() => setHoveringBook(false)}
         />
       )}
 
@@ -280,6 +288,8 @@ export function Book() {
         onBack={handleBack}
         onClose={handleClose}
       />
+
+      <CursorFollower openness={smoothOpenness} mode={mode} hoveringBook={hoveringBook} />
     </div>
   );
 }
