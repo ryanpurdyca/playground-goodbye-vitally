@@ -89,6 +89,7 @@ src/
       Page.tsx               Single hinged page (idle fan or reading-flip)
       BackCover.tsx          Static back cover
       BookButtons.tsx        Fade-in Read/Cancel/Close/Next/Back button pair
+      CursorFollower.tsx     Custom cursor pill; fades in near fully-open position
       LeftPageText.tsx       Handwritten text behind the open cover (DOM-layered)
       constants.ts           All tunable layout/motion constants
       index.ts               Public barrel for the book feature
@@ -172,6 +173,12 @@ Append new entries at the bottom. Use the format: `### YYYY-MM-DD — Title`.
 - **Idle click-to-read**: A transparent `<div>` overlay spanning the full book footprint (`calc(var(--book-width) * 2)`) is rendered in idle mode; clicking it fires `handleRead`. This is outside the perspective container so hit-testing is flat.
 - **Button row spacing**: `top: calc(50vh + var(--book-height) / 2 + 32px)` — 32px fixed gap below the book bottom edge.
 - **BookButtons layout**: Redesigned from two edge-aligned buttons to a left group + right single. In reading mode the left group holds "Next" always and "Back" which fades in (`AnimatePresence`, opacity-only, 150ms) once `currentPage > 0`. "Close" sits on the right in both modes. In idle mode the left group shows "Read" and the right shows "Close".
+
+### 2026-05-28 — CursorFollower, Button design system component, visual polish
+
+- **`CursorFollower`** (`src/components/book/CursorFollower.tsx`). A custom cursor pill ("Read Book") rendered as a `position: fixed` element with `top: 0; left: 0` so it anchors to the viewport (without explicit insets, a `fixed` element's natural position is its document-flow position, which is off-screen at the bottom of a tall component tree). `x`/`y` are spring-smoothed (`stiffness: 250, damping: 25`) MotionValues tracking `pointermove`; the first move snaps to cursor position via `x.set()` directly on the spring to avoid an initial sweep from (0, 0). Opacity is a `useTransform` over `[openness, modeScale, hoverScale]` — three independent gates: (1) proximity gate ramps from 0→1 as openness goes 0.65→0.95; (2) `modeScale` fades to 0 in reading mode; (3) `hoverScale` gates on `onMouseEnter`/`onMouseLeave` of the idle book overlay in `Book.tsx`. All three must be non-zero for the pill to appear.
+- **`Button` design-system component** (`src/design-system/components/Button.tsx`). Generic button with `variant` prop (`primary`, `secondary`, `supporting`). All book UI buttons now use this component.
+- **Visual polish**: Instrument Serif font (replacing Caveat), black borders on all book pieces, decorative dashed rule lines inset 28px from screen edges with a `surface` color gutter frame, metadata labels ("Ryan Purdy" / "Spring 2026") above the open book, background `#f7f5f1`, all tilts zeroed in idle mode.
 
 ## 6. Design system
 

@@ -51,41 +51,31 @@ export function BookButtons({
 
   return (
     <>
-      {/* Book metadata labels — only visible in reading mode */}
-      <AnimatePresence>
-        {isReading && (
-          <>
-            <motion.span
-              key="label-left"
-              className="text-ink-subtle pointer-events-none absolute font-mono text-sm"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.2 }}
-              style={{
-                left: "calc(50vw - var(--book-width))",
-                top: "calc(50vh - var(--book-height) / 2 - 56px)",
-              }}
-            >
-              Ryan Purdy
-            </motion.span>
-            <motion.span
-              key="label-right"
-              className="text-ink-subtle pointer-events-none absolute font-mono text-sm"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.2 }}
-              style={{
-                right: "calc(50vw - var(--book-width))",
-                top: "calc(50vh - var(--book-height) / 2 - 56px)",
-              }}
-            >
-              Spring 2026
-            </motion.span>
-          </>
-        )}
-      </AnimatePresence>
+      {/* Book metadata labels — only visible in reading mode, fade with openness */}
+      {isReading && (
+        <>
+          <motion.span
+            className="text-ink-subtle pointer-events-none absolute font-mono text-sm"
+            style={{
+              opacity: openness,
+              left: "calc(50vw - var(--book-width))",
+              top: "calc(50vh - var(--book-height) / 2 - 56px)",
+            }}
+          >
+            Ryan Purdy
+          </motion.span>
+          <motion.span
+            className="text-ink-subtle pointer-events-none absolute font-mono text-sm"
+            style={{
+              opacity: openness,
+              right: "calc(50vw - var(--book-width))",
+              top: "calc(50vh - var(--book-height) / 2 - 56px)",
+            }}
+          >
+            Spring 2026
+          </motion.span>
+        </>
+      )}
 
       <motion.div
         className="absolute flex items-center justify-between"
