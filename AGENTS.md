@@ -211,6 +211,7 @@ Historical entries below remain for context; **this list is the source of truth*
 | -------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Book piece borders   | `border-ink` on Cover, Page, BackCover (not `border-accent`)                                                                                                               |
 | Cover face           | Black `bg-cover`, outer `border-ink`, white inset `border-cover-border-inner`, corner Vitally SVGs, centred Caveat title “Memories from / my time at Vitally” (`text-3xl`) |
+| Cover inside         | `CoverInside`: `bg-surface-raised`, centred Caveat `text-ink` — “Some of the folks who made my time special.” (visible on the left when open to page 1)                    |
 | Cover fonts          | Caveat via `--font-caveat` inline style — **not** Instrument Serif                                                                                                         |
 | Page chrome          | `page.tsx`: 28px gutter, dotted rules at `top/bottom/left/right-7`, “Change Log” at `bottom: 44px`, `right: 52px`                                                          |
 | Button row           | `top: calc(50vh + var(--book-height) / 2 + 52px)`                                                                                                                          |

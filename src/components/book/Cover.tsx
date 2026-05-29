@@ -184,11 +184,18 @@ function CoverFace({ faceRef, sheenBackground, sheenOpacity }: CoverFaceProps) {
 function CoverInside() {
   return (
     <div
-      className="bg-surface-raised absolute inset-0 rounded-[10px]"
+      className="bg-surface-raised absolute inset-0 flex items-center justify-center rounded-[10px] p-8"
       style={{
         transform: "rotateY(180deg) translateZ(1px)",
         backfaceVisibility: "hidden",
       }}
-    />
+    >
+      <p
+        className="text-ink px-4 text-center text-2xl leading-snug font-bold"
+        style={coverTextStyle}
+      >
+        Some of the folks who made my time special.
+      </p>
+    </div>
   );
 }
