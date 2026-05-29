@@ -257,6 +257,10 @@ Historical entries below remain for context; **this list is the source of truth*
 - **Idle z-order must match reading-page-0 (close-peek fix).** Idle `translateZ` is `(NUM_PAGES - index) * PAGE_Z_STEP` (descending — sheet 0 on top), **not** the old `(index + 1)` (ascending). This is identical to the right-stack order at `readingPage === 0`, so the reading→idle switch at the end of a close (fired at `smoothOpenness < 0.01`, when the cover is still ~3° ajar) doesn't reorder the stack. With the old ascending idle order the sheets flipped at that instant and a lower sheet (page 3) flashed through page 1 before the cover seated — and only when closing from page 0 (flipping pages first changed the settle timing enough to hide it). The fan itself is rotation-dominated, so the z-order change is invisible there. Reading-mode z-order (right reversed, left natural) is unchanged.
 - **Reading mode untouched.** The fan only drives the `readingPage === null` path; the persistent-`rotateY` page-flip and peel logic are unchanged. Verified: full-open idle spread, mid-open cascade, Open → "Chapter One"/Page 1 page-flip, and close-from-page-0 (no peek) all render correctly.
 
+### 2026-05-29 — `PAGE_Z_STEP` raised for coplanar close stability
+
+- **`PAGE_Z_STEP` 0.4 → 1.5.** The idle z-order fix above stopped the stack from _reordering_ at the reading→idle switch, but closing from page 0 with every sheet at `rotateY: 0` still left six coplanar planes. At 0.4px the depth gaps fell below renderer precision after the perspective divide, so the sort went unstable as the cover seated and a lower sheet (e.g. page 3) flickered through page 1. Flipping pages first hid it because sheets were still mid-spring at varied angles. The fan is rotation-dominated and closed/reading stacks share one outline, so the larger step is invisible except killing that flicker.
+
 ## 6. Design system
 
 **Tokens** (`src/design-system/tokens.css`):

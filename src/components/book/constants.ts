@@ -60,8 +60,20 @@ export const OPENNESS_SPRING = {
   mass: 0.6,
 } as const;
 
-/** Z-offset between stacked pages (px). Prevents z-fighting when closed. */
-export const PAGE_Z_STEP = 0.4;
+/**
+ * Z-offset between stacked pages (px). Separates the parallel page planes in
+ * depth so the 3D sort is stable.
+ *
+ * Must be comfortably large: when the book closes with no pages flipped, every
+ * sheet sits at exactly `rotateY: 0` — six perfectly coplanar planes. At the
+ * old 0.4px the depth gaps fell below the renderer's precision after the
+ * perspective divide, so the sort went unstable as the cover seated and a lower
+ * sheet (e.g. page 3) flickered through page 1. (Flipping pages first hid it:
+ * the sheets were still mid-spring at varied angles, so not coplanar.) The fan
+ * is rotation-dominated and the closed/reading stacks share one outline, so a
+ * larger step is invisible everywhere except killing that flicker.
+ */
+export const PAGE_Z_STEP = 1.5;
 
 /**
  * Must equal the `--book-width` CSS token in tokens.css (320px).
