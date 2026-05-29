@@ -102,7 +102,7 @@ export function BookButtons({
               top: "calc(50vh - var(--book-height) / 2 - 56px)",
             }}
           >
-            Spring 2026
+            2022-2026
           </motion.span>
         </>
       )}
