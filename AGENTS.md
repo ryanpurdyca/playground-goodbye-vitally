@@ -87,6 +87,7 @@ src/
       Stage.tsx              Full-viewport centered surface
       Button.tsx             primary | secondary | supporting variants
       PageSurface.tsx        Paper-card frame every book page inherits
+      Tooltip.tsx            Pointer-events-none label (e.g. people-cloud hover names)
       HalftoneSquare.tsx     Pure-SVG halftone fill
       HalftoneSquare.test.tsx
   components/                Feature compositions (not reusable primitives)
@@ -95,18 +96,20 @@ src/
       Cover.tsx              Black cover face: Vitally SVGs, centred Caveat title
       Page.tsx               Single hinged sheet (idle fan or reading-flip); renders front + back faces
       pages.tsx              Flat list of authored page components (the book's content)
+      PeopleCloud.tsx        Page-1 collision-packed coworker portrait bubbles
+      people.ts              Portrait list + display names (`public/images/people/`)
       BackCover.tsx          Static back cover
       BookButtons.tsx        Fade-in Open|Next/Close/Back button pair
       CursorFollower.tsx     Custom cursor pill ("Open"); fades in near fully-open
       LeftPageText.tsx       Handwritten text behind the open cover (DOM-layered)
-      constants.ts           All tunable layout/motion constants
+      constants.ts           All tunable layout/motion constants (incl. `PEOPLE_CLOUD_*`)
       index.ts               Public barrel for the book feature
       Book.test.tsx
 e2e/
   book.spec.ts               Playwright smoke test of the rendered book
 scripts/
   agents-reminder.mjs        Pre-commit guard that nudges AGENTS.md updates
-public/                      Static assets (`images/vitally-01.svg`, `vitally-02.svg` on book cover)
+public/                      Static assets (`images/vitally-*.svg` on cover; `images/people/` portraits)
 ```
 
 **Conventions:**
@@ -180,7 +183,7 @@ Append new entries at the bottom. Use the format: `### YYYY-MM-DD — Title`.
 - **Mouse range inset**: `closeAt = spineX + BOOK_WIDTH_PX - 100` and `openAt = spineX - BOOK_WIDTH_PX + 100`. Full open/close is reached 100px before the book's physical edge, which is more ergonomic.
 - **Idle click-to-read**: A transparent `<div>` overlay spanning the full book footprint (`calc(var(--book-width) * 2)`) is rendered in idle mode; clicking it fires `handleRead`. This is outside the perspective container so hit-testing is flat.
 - **Button row spacing**: `top: calc(50vh + var(--book-height) / 2 + 32px)` — 32px fixed gap below the book bottom edge.
-- **BookButtons layout**: Redesigned from two edge-aligned buttons to a left group + right single. In reading mode the left group holds "Next" always and "Back" which fades in (`AnimatePresence`, opacity-only, 150ms) once `currentPage > 0`. "Close" sits on the right in both modes. In idle mode the primary button shows "Open" (was "Read"); the right shows "Close".
+- **BookButtons layout**: Redesigned from two edge-aligned buttons to a left group + right single. In reading mode the left group holds "Next" always and "Back" which fades in (`AnimatePresence`, opacity-only, 150ms) once `currentPage > 0`. "Next" stays visible but `disabled` on the last page (`currentPage >= NUM_PAGES`). "Close" sits on the right in both modes. In idle mode the primary button shows "Open" (was "Read"); the right shows "Close".
 
 ### 2026-05-28 — Cover branding: black face, Vitally artwork, Caveat labels
 
@@ -192,7 +195,7 @@ Append new entries at the bottom. Use the format: `### YYYY-MM-DD — Title`.
 
 - **`CursorFollower`** (`src/components/book/CursorFollower.tsx`). A custom cursor pill ("Open") rendered as a `position: fixed` element with `top: 0; left: 0` so it anchors to the viewport (without explicit insets, a `fixed` element's natural position is its document-flow position, which is off-screen at the bottom of a tall component tree). `x`/`y` are spring-smoothed (`stiffness: 250, damping: 25`) MotionValues tracking `pointermove`; the first move snaps to cursor position via `x.set()` directly on the spring to avoid an initial sweep from (0, 0). Opacity is a `useTransform` over `[openness, modeScale, hoverScale]` — three independent gates: (1) proximity gate ramps from 0→1 as openness goes 0.65→0.95; (2) `modeScale` fades to 0 in reading mode; (3) `hoverScale` gates on `onMouseEnter`/`onMouseLeave` of the idle book overlay in `Book.tsx`. All three must be non-zero for the pill to appear.
 - **`Button` design-system component** (`src/design-system/components/Button.tsx`). Generic button with `variant` prop (`primary`, `secondary`, `supporting`). All book UI buttons now use this component.
-- **Visual polish** (see also Cover branding entry — cover title reverted to Caveat): black `border-ink` on book pieces, dotted rules inset 28px (`--color-rule`), `border-gutter` frame, metadata labels ("Ryan Purdy" / "Spring 2026") in reading mode, canvas background `#f7f5f1`, scene tilts zeroed in idle.
+- **Visual polish** (see also Cover branding entry — cover title reverted to Caveat): black `border-ink` on book pieces, dotted rules inset 28px (`--color-rule`), `border-gutter` frame, metadata labels ("Ryan Purdy" / "2022-2026") in reading mode, canvas background `#f7f5f1`, scene tilts zeroed in idle.
 - **Fonts**: Geist → `--font-sans` (body). Instrument Serif → `--font-handwritten` (available via `@utility font-handwritten`; not used on cover). Caveat → `--font-caveat` for `LeftPageText` and cover title — prefer inline `style={{ fontFamily: "var(--font-caveat)" }}` over `@utility font-caveat` when reliability matters (see §7).
 
 ### 2026-05-28 — Open affordances and Button interaction states
@@ -208,6 +211,7 @@ Historical entries below remain for context; **this list is the source of truth*
 | -------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Book piece borders   | `border-ink` on Cover, Page, BackCover (not `border-accent`)                                                                                                               |
 | Cover face           | Black `bg-cover`, outer `border-ink`, white inset `border-cover-border-inner`, corner Vitally SVGs, centred Caveat title “Memories from / my time at Vitally” (`text-3xl`) |
+| Cover inside         | `CoverInside`: `bg-surface-raised`, centred Caveat `text-ink` — “Some of the folks who made my time special.” (visible on the left when open to page 1)                    |
 | Cover fonts          | Caveat via `--font-caveat` inline style — **not** Instrument Serif                                                                                                         |
 | Page chrome          | `page.tsx`: 28px gutter, dotted rules at `top/bottom/left/right-7`, “Change Log” at `bottom: 44px`, `right: 52px`                                                          |
 | Button row           | `top: calc(50vh + var(--book-height) / 2 + 52px)`                                                                                                                          |
@@ -261,6 +265,14 @@ Historical entries below remain for context; **this list is the source of truth*
 
 - **`PAGE_Z_STEP` 0.4 → 1.5.** The idle z-order fix above stopped the stack from _reordering_ at the reading→idle switch, but closing from page 0 with every sheet at `rotateY: 0` still left six coplanar planes. At 0.4px the depth gaps fell below renderer precision after the perspective divide, so the sort went unstable as the cover seated and a lower sheet (e.g. page 3) flickered through page 1. Flipping pages first hid it because sheets were still mid-spring at varied angles. The fan is rotation-dominated and closed/reading stacks share one outline, so the larger step is invisible except killing that flicker.
 
+### 2026-05-29 — Page 1 people bubble cloud
+
+- **Page 1 content** (`ChapterOpen` in `pages.tsx`) is a full-bleed `PeopleCloud` of 25 coworker portraits from `public/images/people/`, listed in `people.ts` with display names derived from filenames. "Chapter One" copy removed.
+- **Layout engine.** Golden-angle seed + static collision solve to a stable **home** layout (`homeX`/`homeY`, shared `baseR`). DOM bubbles are fixed at home; Framer Motion springs animate `x`/`y`/`scale` deltas toward precomputed targets (`PEOPLE_CLOUD_SPRING`). No per-frame RAF sim — hover jitter avoided.
+- **Hover targets.** On hover, radii are set (grow hovered, shrink home-neighbors within `PEOPLE_CLOUD_NEIGHBOR_RANGE_PX`), hovered bubble is **immovable**, neighbors are solved once to a collision-free layout; `useMemo` caches per `hoveredId`. Tooltip portaled to `document.body` at hovered home center + grown radius.
+- **Pointer-events tradeoff.** Page faces are `pointer-events: none`; `PeopleCloud` bubbles use `pointer-events: auto` only when `BookReadingContext.peopleCloudInteractive` (`reading` + `currentPage === 0`). After flipping past page 1, bubbles are `pointer-events: none` so the reversed 3D face does not steal hits from the verso. Reading-mode L/R nav overlays render **behind** the 3D scene; on page 0, bubbles forward peel/Next via context and `pointermove` over the full right footprint.
+- **Page 0 left / inside cover = Close.** Only on `currentPage === 0`: the left nav overlay calls `handleClose` (not Back); `CoverInside` re-enables `pointer-events: auto` via `coverPageInteractive` and forwards click/hover through `BookReadingContext`. `Cover` accepts `closePeelActive` when `hoveredSide === "left"` so the open cover peels like a left-stack page about to close. ArrowLeft on page 0 already matched Close.
+
 ## 6. Design system
 
 **Tokens** (`src/design-system/tokens.css`):
@@ -274,8 +286,9 @@ Historical entries below remain for context; **this list is the source of truth*
 
 - `Stage` — Full-viewport centered surface for top-level scenes.
 - `HalftoneSquare` — Pure-SVG dot grid. Color-controlled via `currentColor`.
-- `Button` — Generic button with `variant` prop: `primary` (filled ink, hover/active opacity), `secondary` (outlined ink; hover fills ink/white text; active matches primary `bg-ink/75`), `supporting` (ghost; hover 2px ink border, no fill; active light ink tint). Always use this over raw `<button>` elements.
+- `Button` — Generic button with `variant` prop: `primary` (filled ink, hover/active opacity), `secondary` (outlined ink; hover fills ink/white text; active matches primary `bg-ink/75`), `supporting` (ghost; hover 2px ink border, no fill; active light ink tint). Optional `disabled` (40% opacity, `cursor-not-allowed`, hover/active suppressed; native `disabled` blocks clicks). Always use this over raw `<button>` elements.
 - `PageSurface` — The "paper card" frame for every book page (paper bg, ink border, `rounded-[10px]`, `p-8`, `flex flex-col`). Fills its parent (a leaf's 3D face wrapper) via `absolute inset-0`; owns no 3D transform. Authored pages in `book/pages.tsx` wrap content in this and extend it via `className`. Accepts all `div` props.
+- `Tooltip` — Presentational label positioned with `left`/`top` + `translate(-50%, calc(-100% - 8px))`. `pointer-events: none`; `visible` toggles opacity. Used for people-cloud names on hover — never participates in layout simulation.
 
 **Utilities:**
 
@@ -293,7 +306,7 @@ When you add a primitive or token, update this section and add it to the design-
 - **`next/font` variables need `@utility`, not `@theme inline`** — `@theme inline` resolves `var()` references at build time. Color tokens work because they're defined statically in `tokens.css`. Font variables injected by `next/font` at runtime are invisible to Tailwind's build step, so `@theme inline { --font-handwritten: var(--font-handwritten) }` generates no utility. Fix: use `@utility font-handwritten { font-family: var(--font-handwritten); }` in `globals.css` instead — this emits the rule directly and lets the CSS variable resolve at runtime from the `html` element.
 - **`@utility` font helpers can silently fail for some `next/font` variables** — even a correctly declared `@utility font-caveat { font-family: var(--font-caveat); }` may not apply if Tailwind's class scanner misses the utility or the CSS variable resolves before `next/font` injects it. Reliable fallback: use an inline `style={{ fontFamily: "var(--font-caveat)" }}` directly on the element — this bypasses Tailwind entirely and resolves the CSS variable at runtime from the `html` element.
 - **`useSpring` tracking stalls when source jumps from its initial value** — In Framer Motion 12, `useSpring(source)` tracks changes to `source` via subscription. If `source` was never animated (sits at its initial value 0 since mount) and then `source.set(1)` is called, the spring's internal animation scheduler sometimes fails to start, leaving the spring dormant at 0. Workaround: after `source.set(newValue)`, also call `animate(smoothValue, newValue, ...)` directly to bypass the tracking. This is why `handleRead` calls `animate(smoothOpenness, 1, { stiffness: 400, damping: 40 })` alongside `openness.set(1)`.
-- **`preserve-3d` perspective container must have `pointerEvents: "none"`** — 3D-transformed children are hit-tested in screen space, so visually overlapping 3D book elements capture pointer events before flat overlay `<div>`s behind them in the DOM. Setting `pointerEvents: "none"` on the perspective container delegates all interaction to the purpose-built flat overlays (idle click region, reading-mode left/right regions) which are rendered outside the perspective container as siblings.
+- **`preserve-3d` perspective container must have `pointerEvents: "none"`** — 3D-transformed children are hit-tested in screen space, so visually overlapping 3D book elements capture pointer events before flat overlay `<div>`s behind them in the DOM. Setting `pointerEvents: "none"` on the perspective container delegates all interaction to the purpose-built flat overlays (idle click region, reading-mode left/right regions) which are rendered outside the perspective container as siblings. **Exceptions:** `PeopleCloud` bubbles and page-0 `CoverInside` re-enable `pointer-events: auto` when `BookReadingContext` marks them interactive; nav overlays stay behind the 3D scene for peel + click-through on empty areas.
 - **Cover and left-page Caveat** — use `style={{ fontFamily: "var(--font-caveat)" }}` on cover title and `LeftPageText`; do not use `--font-handwritten` for those surfaces.
 - **§5 history vs current** — entries before “Canonical current state” may describe superseded accent borders, Instrument Serif on the cover, or “Read” labelling; trust the canonical table and §1–§4 over older decision bullets.
 
