@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
-import { PageSurface, Polaroid } from "@/design-system";
+import { PageSurface } from "@/design-system";
+import { BookPolaroid } from "./BookPolaroid";
 import { PeopleCloud } from "./PeopleCloud";
 
 /**
@@ -32,7 +33,7 @@ function PolaroidPreview() {
   return (
     <PageSurface className="overflow-hidden p-6">
       <div className="relative size-full">
-        <Polaroid
+        <BookPolaroid
           className="absolute top-2 left-2 z-30"
           image="/images/people/img-laura.png"
           alt="Laura"
@@ -48,7 +49,7 @@ function PolaroidPreview() {
             Cod
           </p>
         </div>
-        <Polaroid
+        <BookPolaroid
           className="absolute top-1/2 right-2 z-20 -translate-y-1/2"
           image="/images/people/img-jason.jpeg"
           alt="Jason"
@@ -57,7 +58,7 @@ function PolaroidPreview() {
           tape={1}
           tapeRotation={-1}
         />
-        <Polaroid
+        <BookPolaroid
           className="absolute bottom-2 left-2 z-10"
           image="/images/people/img-anna.jpeg"
           alt="Anna"
@@ -82,7 +83,7 @@ function TwoPolaroids() {
   return (
     <PageSurface className="overflow-hidden p-6">
       <div className="relative size-full">
-        <Polaroid
+        <BookPolaroid
           className="absolute top-10 right-6 z-20"
           image="/images/people/img-parker.jpeg"
           alt="Parker"
@@ -91,7 +92,7 @@ function TwoPolaroids() {
           tape={2}
           tapeRotation={0}
         />
-        <Polaroid
+        <BookPolaroid
           className="absolute bottom-10 left-6 z-10"
           image="/images/people/img-mimi.jpeg"
           alt="Mimi"

@@ -216,6 +216,19 @@ export function Book() {
 
   const readingNav = useMemo(
     () => ({
+      onPageFaceClick: (clientX: number) => {
+        if (modeRef.current !== "reading") return;
+        const spine = window.innerWidth / 2;
+        if (clientX < spine) {
+          if (currentPageRef.current > 0) {
+            setCurrentPageSync(currentPageRef.current - 1);
+          } else {
+            handleCloseRef.current();
+          }
+        } else if (currentPageRef.current < NUM_PAGES) {
+          setCurrentPageSync(Math.min(currentPageRef.current + 1, NUM_PAGES));
+        }
+      },
       onRightPagePointer: () => setHoveredSide("right"),
       onRightPageClick: () => {
         if (currentPageRef.current < NUM_PAGES) {
