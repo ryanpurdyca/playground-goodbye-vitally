@@ -185,10 +185,10 @@ export function Book() {
     return () => window.removeEventListener("keydown", onKeyDown);
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-  // Page 0: nav overlays sit behind the people cloud. Drive peel from pointer
-  // position anywhere on the page footprint (including over bubbles).
+  // Nav overlays sit behind page content (pointer-events-none faces). Drive peel
+  // from pointer position anywhere on the page footprint (bubbles, polaroids, etc.).
   useEffect(() => {
-    if (mode !== "reading" || currentPage !== 0) return;
+    if (mode !== "reading") return;
 
     const onPointerMove = (e: PointerEvent) => {
       const top = window.innerHeight / 2 - BOOK_HEIGHT_PX / 2;
@@ -210,7 +210,7 @@ export function Book() {
 
     window.addEventListener("pointermove", onPointerMove, { passive: true });
     return () => window.removeEventListener("pointermove", onPointerMove);
-  }, [mode, currentPage]);
+  }, [mode]);
 
   const readingPage = mode === "reading" ? currentPage : null;
 

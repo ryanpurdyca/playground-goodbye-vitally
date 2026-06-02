@@ -33,7 +33,7 @@ function PolaroidPreview() {
     <PageSurface className="overflow-hidden p-6">
       <div className="relative size-full">
         <Polaroid
-          className="absolute top-2 left-2 z-10"
+          className="absolute top-2 left-2 z-30"
           image="/images/people/img-laura.png"
           alt="Laura"
           caption="First week"
@@ -51,7 +51,7 @@ function PolaroidPreview() {
           tapeRotation={-1}
         />
         <Polaroid
-          className="absolute bottom-2 left-2 z-30"
+          className="absolute bottom-2 left-2 z-10"
           image="/images/people/img-anna.jpeg"
           alt="Anna"
           caption="All hands"

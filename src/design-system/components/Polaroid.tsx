@@ -10,6 +10,16 @@ export type PolaroidTape = 1 | 2 | 3 | 4 | 5 | 6;
 /** Tape strip tilt in degrees. */
 export type PolaroidTapeRotation = 2 | 1 | 0 | -1 | -2;
 
+const ROTATION_CLASS: Record<PolaroidRotation, string> = {
+  [-3]: "-rotate-3",
+  [-2]: "-rotate-2",
+  [-1]: "-rotate-1",
+  0: "",
+  1: "rotate-1",
+  2: "rotate-2",
+  3: "rotate-3",
+};
+
 const TAPE_SRC: Record<PolaroidTape, string> = {
   1: "/images/tape/tape-1.webp",
   2: "/images/tape/tape-2.webp",
@@ -54,12 +64,12 @@ export function Polaroid({
     <div
       {...rest}
       className={cn(
-        "border-rule relative inline-flex flex-col rounded-[8px] border bg-white",
+        "group border-rule pointer-events-auto relative inline-flex flex-col rounded-[8px] border bg-white",
+        ROTATION_CLASS[rotation],
         className,
       )}
       style={{
         boxShadow: "0 2px 8px rgba(0, 0, 0, 0.07), 0 1px 2px rgba(0, 0, 0, 0.05)",
-        transform: rotation !== 0 ? `rotate(${rotation}deg)` : undefined,
         ...style,
       }}
     >
@@ -80,7 +90,7 @@ export function Polaroid({
         <img
           src={image}
           alt={alt}
-          className="absolute inset-0 h-full w-full object-cover"
+          className="absolute inset-0 h-full w-full object-cover transition-transform duration-300 ease-out group-hover:scale-110"
           draggable={false}
         />
       </div>
