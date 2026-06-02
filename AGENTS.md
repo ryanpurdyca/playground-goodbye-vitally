@@ -26,7 +26,7 @@ If none of the above apply, the change is probably trivial enough that the pre-c
 
 ## 1. Product
 
-A single-page experience: on load, the user sees a 3D book built with CSS 3D transforms, inline SVG (e.g. halftone), and static SVG cover artwork (`public/images/vitally-*.svg`) — no raster textures. The book opens and closes following pointer X; at the right edge it closes, at the left it opens fully. The cover and inner pages animate; pages fan out as the book opens. A dotted frame and gutter surround the scene; a “Change Log” label sits at the bottom-right of the frame.
+A single-page experience: on load, the user sees a 3D book built with CSS 3D transforms, inline SVG (e.g. halftone), and static SVG cover artwork (`public/images/stickers/vitally-*.svg`) — no raster textures. The book opens and closes following pointer X; at the right edge it closes, at the left it opens fully. The cover and inner pages animate; pages fan out as the book opens. A dotted frame and gutter surround the scene; a “Change Log” label sits at the bottom-right of the frame.
 
 Future direction is intentionally open; this is the canvas for an exploration whose product shape will emerge over time.
 
@@ -109,7 +109,7 @@ e2e/
   book.spec.ts               Playwright smoke test of the rendered book
 scripts/
   agents-reminder.mjs        Pre-commit guard that nudges AGENTS.md updates
-public/                      Static assets (`images/vitally-*.svg` on cover; `images/people/` portraits; `images/tape/` for Polaroid tape)
+public/                      Static assets (`images/stickers/vitally-*.svg` on cover; `images/people/` portraits; `images/tape/` for Polaroid tape)
 ```
 
 **Conventions:**
@@ -217,7 +217,7 @@ Historical entries below remain for context; **this list is the source of truth*
 | Button row           | `top: calc(50vh + var(--book-height) / 2 + 52px)`                                                                                                                          |
 | Page label (reading) | `text-ink-subtle` mono between buttons — not accent blue                                                                                                                   |
 | LeftPageText font    | `--font-caveat` inline style                                                                                                                                               |
-| Static assets        | `public/images/vitally-01.svg`, `vitally-02.svg` on cover only                                                                                                             |
+| Static assets        | `public/images/stickers/vitally-01.svg`, `vitally-02.svg` on cover only                                                                                                    |
 
 ### 2026-05-28 — Customizable pages (two-faced leaves + content list)
 
