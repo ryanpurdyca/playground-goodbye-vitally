@@ -313,8 +313,8 @@ When you add a primitive or token, update this section and add it to the design-
 
 ### 2026-06-01 — Polaroid component; page 2 cleared
 
-- **`Polaroid` design-system primitive** (`src/design-system/components/Polaroid.tsx`). White frame, 8px radius, 1px `border-rule`, 140×108px image, compact Caveat caption. Optional `rotation`: `-3` … `3` degrees (default `0`). Optional masking tape: `tape` `1`–`6`, `tapeRotation` `2` … `-2` (default `0`). Tape assets in `public/images/tape/`. Exported from the design-system barrel.
-- **Page 2 (`bookPages[1]`)** — `PolaroidPreview`: three staggered `<Polaroid>`s (absolute stack, offset top/left per card).
+- **`Polaroid` design-system primitive** (`src/design-system/components/Polaroid.tsx`). White frame, 8px radius, 1px `border-rule`, 140×108px image, centered bold Caveat caption (`text-base`). Optional `rotation`: `-3` … `3` degrees (default `0`). Optional masking tape: `tape` `1`–`6`, `tapeRotation` `2` … `-2` (default `0`). Tape assets in `public/images/tape/`. Exported from the design-system barrel.
+- **Page 2 (`bookPages[1]`)** — `PolaroidPreview`: three `<Polaroid>`s at upper-left, middle-right, and bottom-left of the page.
 
 ## 8. Quality gates
 

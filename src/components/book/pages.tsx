@@ -31,9 +31,9 @@ function ChapterOpen() {
 function PolaroidPreview() {
   return (
     <PageSurface className="overflow-hidden p-6">
-      <div className="relative mx-auto h-[300px] w-[200px]">
+      <div className="relative size-full">
         <Polaroid
-          className="absolute top-0 left-0 z-10"
+          className="absolute top-2 left-2 z-10"
           image="/images/people/img-laura.png"
           alt="Laura"
           caption="First week"
@@ -42,7 +42,7 @@ function PolaroidPreview() {
           tapeRotation={1}
         />
         <Polaroid
-          className="absolute top-[88px] left-7 z-20"
+          className="absolute top-1/2 right-2 z-20 -translate-y-1/2"
           image="/images/people/img-jason.jpeg"
           alt="Jason"
           caption="Team lunch"
@@ -51,7 +51,7 @@ function PolaroidPreview() {
           tapeRotation={-1}
         />
         <Polaroid
-          className="absolute top-[176px] left-1 z-30"
+          className="absolute bottom-2 left-2 z-30"
           image="/images/people/img-anna.jpeg"
           alt="Anna"
           caption="All hands"

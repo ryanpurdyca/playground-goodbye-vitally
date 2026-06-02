@@ -85,10 +85,10 @@ export function Polaroid({
         />
       </div>
 
-      <div className="flex min-h-5 items-center px-1.5 pt-0.5 pb-1">
+      <div className="flex min-h-6 items-center justify-center px-1.5 pt-0.5 pb-1 text-center">
         {caption && (
           <span
-            className="text-ink text-xs leading-snug"
+            className="text-ink text-base leading-snug font-bold"
             style={{ fontFamily: "var(--font-caveat)" }}
           >
             {caption}
