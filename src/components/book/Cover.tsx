@@ -66,8 +66,9 @@ export function Cover({ openness, closePeelActive = false }: Props) {
   // Iridescent sheen that tracks the pointer across the cover face. The cover
   // can't receive its own pointer events (the perspective container sets
   // `pointerEvents: none`, see §7), so we listen on the window and measure the
-  // face's projected rect to derive a local 0–1 position. `hover` gates the
-  // effect off whenever the cursor leaves the cover footprint.
+  // face's projected rect to derive a local 0–1 position. The sheen is always
+  // visible; `hover` nudges brightness up slightly while the cursor is over the
+  // cover footprint.
   const faceRef = useRef<HTMLDivElement>(null);
   const sheenX = useMotionValue(50);
   const sheenY = useMotionValue(50);
@@ -75,6 +76,7 @@ export function Cover({ openness, closePeelActive = false }: Props) {
   const smoothX = useSpring(sheenX, COVER_SHEEN_SPRING);
   const smoothY = useSpring(sheenY, COVER_SHEEN_SPRING);
   const smoothHover = useSpring(hover, COVER_SHEEN_SPRING);
+  const sheenBrightness = useTransform(smoothHover, [0, 1], [1, 1.14]);
 
   useEffect(() => {
     const onMove = (e: PointerEvent) => {
@@ -145,7 +147,11 @@ export function Cover({ openness, closePeelActive = false }: Props) {
         aria-hidden
         className="border-cover-border-inner pointer-events-none absolute inset-[3px] rounded-[7px] border"
       />
-      <CoverFace faceRef={faceRef} sheenBackground={sheenBackground} sheenOpacity={smoothHover} />
+      <CoverFace
+        faceRef={faceRef}
+        sheenBackground={sheenBackground}
+        sheenBrightness={sheenBrightness}
+      />
       <CoverInside />
     </motion.div>
   );
@@ -154,10 +160,11 @@ export function Cover({ openness, closePeelActive = false }: Props) {
 type CoverFaceProps = {
   faceRef: React.Ref<HTMLDivElement>;
   sheenBackground: MotionValue<string>;
-  sheenOpacity: MotionValue<number>;
+  sheenBrightness: MotionValue<number>;
 };
 
-function CoverFace({ faceRef, sheenBackground, sheenOpacity }: CoverFaceProps) {
+function CoverFace({ faceRef, sheenBackground, sheenBrightness }: CoverFaceProps) {
+  const sheenFilter = useMotionTemplate`brightness(${sheenBrightness})`;
   return (
     <div ref={faceRef} className="absolute inset-0" style={{ backfaceVisibility: "hidden" }}>
       <img
@@ -194,7 +201,7 @@ function CoverFace({ faceRef, sheenBackground, sheenOpacity }: CoverFaceProps) {
         className="pointer-events-none absolute inset-0 overflow-hidden rounded-[10px]"
         style={{
           background: sheenBackground,
-          opacity: sheenOpacity,
+          filter: sheenFilter,
           mixBlendMode: "screen",
         }}
       />
