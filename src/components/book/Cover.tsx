@@ -66,8 +66,8 @@ export function Cover({ openness, closePeelActive = false }: Props) {
   // Iridescent sheen that tracks the pointer across the cover face. The cover
   // can't receive its own pointer events (the perspective container sets
   // `pointerEvents: none`, see §7), so we listen on the window and measure the
-  // face's projected rect to derive a local 0–1 position. `hover` gates the
-  // effect off whenever the cursor leaves the cover footprint.
+  // face's projected rect to derive a local 0–1 position. The sheen is always
+  // visible; `hover` lifts wash alphas and overall brightness on the footprint.
   const faceRef = useRef<HTMLDivElement>(null);
   const sheenX = useMotionValue(50);
   const sheenY = useMotionValue(50);
@@ -75,6 +75,13 @@ export function Cover({ openness, closePeelActive = false }: Props) {
   const smoothX = useSpring(sheenX, COVER_SHEEN_SPRING);
   const smoothY = useSpring(sheenY, COVER_SHEEN_SPRING);
   const smoothHover = useSpring(hover, COVER_SHEEN_SPRING);
+  const sheenBrightness = useTransform(smoothHover, [0, 1], [1, 1.14]);
+  const sheenCyanAlpha = useTransform(smoothHover, [0, 1], [0.24, 0.3]);
+  const sheenMagentaAlpha = useTransform(smoothHover, [0, 1], [0.22, 0.27]);
+  const sheenGreenAlpha = useTransform(smoothHover, [0, 1], [0.2, 0.25]);
+  const sheenGoldAlpha = useTransform(smoothHover, [0, 1], [0.19, 0.23]);
+  const sheenPurpleAlpha = useTransform(smoothHover, [0, 1], [0.22, 0.27]);
+  const sheenWhiteAlpha = useTransform(smoothHover, [0, 1], [0.09, 0.11]);
 
   useEffect(() => {
     const onMove = (e: PointerEvent) => {
@@ -100,7 +107,7 @@ export function Cover({ openness, closePeelActive = false }: Props) {
   const shimmer = useMotionValue(0);
   useEffect(() => {
     const controls = animate(shimmer, Math.PI * 2, {
-      duration: 9,
+      duration: 5,
       ease: "linear",
       repeat: Infinity,
     });
@@ -123,7 +130,7 @@ export function Cover({ openness, closePeelActive = false }: Props) {
   const a5x = useTransform(shimmer, (s) => 50 + Math.cos(s + SHEEN_PHASE * 4) * SHEEN_DRIFT);
   const a5y = useTransform(shimmer, (s) => 50 + Math.sin(s + SHEEN_PHASE * 4) * SHEEN_DRIFT);
 
-  const sheenBackground = useMotionTemplate`radial-gradient(90% 80% at ${a1x}% ${a1y}%, rgba(48,188,210,0.24) 0%, rgba(48,188,210,0) 65%), radial-gradient(85% 75% at ${a2x}% ${a2y}%, rgba(220,80,178,0.22) 0%, rgba(220,80,178,0) 65%), radial-gradient(90% 80% at ${a3x}% ${a3y}%, rgba(52,205,145,0.20) 0%, rgba(52,205,145,0) 65%), radial-gradient(85% 75% at ${a4x}% ${a4y}%, rgba(220,178,62,0.19) 0%, rgba(220,178,62,0) 65%), radial-gradient(80% 70% at ${a5x}% ${a5y}%, rgba(145,98,225,0.22) 0%, rgba(145,98,225,0) 65%), radial-gradient(50% 50% at ${smoothX}% ${smoothY}%, rgba(255,255,255,0.09) 0%, rgba(255,255,255,0) 65%)`;
+  const sheenBackground = useMotionTemplate`radial-gradient(90% 80% at ${a1x}% ${a1y}%, rgba(48,188,210,${sheenCyanAlpha}) 0%, rgba(48,188,210,0) 65%), radial-gradient(85% 75% at ${a2x}% ${a2y}%, rgba(220,80,178,${sheenMagentaAlpha}) 0%, rgba(220,80,178,0) 65%), radial-gradient(90% 80% at ${a3x}% ${a3y}%, rgba(52,205,145,${sheenGreenAlpha}) 0%, rgba(52,205,145,0) 65%), radial-gradient(85% 75% at ${a4x}% ${a4y}%, rgba(220,178,62,${sheenGoldAlpha}) 0%, rgba(220,178,62,0) 65%), radial-gradient(80% 70% at ${a5x}% ${a5y}%, rgba(145,98,225,${sheenPurpleAlpha}) 0%, rgba(145,98,225,0) 65%), radial-gradient(50% 50% at ${smoothX}% ${smoothY}%, rgba(255,255,255,${sheenWhiteAlpha}) 0%, rgba(255,255,255,0) 65%)`;
 
   return (
     <motion.div
@@ -145,7 +152,11 @@ export function Cover({ openness, closePeelActive = false }: Props) {
         aria-hidden
         className="border-cover-border-inner pointer-events-none absolute inset-[3px] rounded-[7px] border"
       />
-      <CoverFace faceRef={faceRef} sheenBackground={sheenBackground} sheenOpacity={smoothHover} />
+      <CoverFace
+        faceRef={faceRef}
+        sheenBackground={sheenBackground}
+        sheenBrightness={sheenBrightness}
+      />
       <CoverInside />
     </motion.div>
   );
@@ -154,10 +165,11 @@ export function Cover({ openness, closePeelActive = false }: Props) {
 type CoverFaceProps = {
   faceRef: React.Ref<HTMLDivElement>;
   sheenBackground: MotionValue<string>;
-  sheenOpacity: MotionValue<number>;
+  sheenBrightness: MotionValue<number>;
 };
 
-function CoverFace({ faceRef, sheenBackground, sheenOpacity }: CoverFaceProps) {
+function CoverFace({ faceRef, sheenBackground, sheenBrightness }: CoverFaceProps) {
+  const sheenFilter = useMotionTemplate`brightness(${sheenBrightness})`;
   return (
     <div ref={faceRef} className="absolute inset-0" style={{ backfaceVisibility: "hidden" }}>
       <img
@@ -194,7 +206,7 @@ function CoverFace({ faceRef, sheenBackground, sheenOpacity }: CoverFaceProps) {
         className="pointer-events-none absolute inset-0 overflow-hidden rounded-[10px]"
         style={{
           background: sheenBackground,
-          opacity: sheenOpacity,
+          filter: sheenFilter,
           mixBlendMode: "screen",
         }}
       />
