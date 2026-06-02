@@ -289,6 +289,7 @@ Historical entries below remain for context; **this list is the source of truth*
 - `Button` — Generic button with `variant` prop: `primary` (filled ink, hover/active opacity), `secondary` (outlined ink; hover fills ink/white text; active matches primary `bg-ink/75`), `supporting` (ghost; hover 2px ink border, no fill; active light ink tint). Optional `disabled` (40% opacity, `cursor-not-allowed`, hover/active suppressed; native `disabled` blocks clicks). Always use this over raw `<button>` elements.
 - `PageSurface` — The "paper card" frame for every book page (paper bg, ink border, `rounded-[10px]`, `p-8`, `flex flex-col`). Fills its parent (a leaf's 3D face wrapper) via `absolute inset-0`; owns no 3D transform. Authored pages in `book/pages.tsx` wrap content in this and extend it via `className`. Accepts all `div` props.
 - `Tooltip` — Presentational label positioned with `left`/`top` + `translate(-50%, calc(-100% - 8px))`. `pointer-events: none`; `visible` toggles opacity. Used for people-cloud names on hover — never participates in layout simulation.
+- `Polaroid` — A photo print card with a white frame, `rounded-[8px]`, 1px `border-rule` (same token as the page dotted frame), and optional Caveat-font caption. Props: `image` (src), `alt`, `caption`, `rotation` (`-3` … `3` degrees, default `0`). Image area is 180×140px with matching 1px border and `rounded-[4px]`. Subtle box shadow.
 
 **Utilities:**
 
@@ -309,6 +310,11 @@ When you add a primitive or token, update this section and add it to the design-
 - **`preserve-3d` perspective container must have `pointerEvents: "none"`** — 3D-transformed children are hit-tested in screen space, so visually overlapping 3D book elements capture pointer events before flat overlay `<div>`s behind them in the DOM. Setting `pointerEvents: "none"` on the perspective container delegates all interaction to the purpose-built flat overlays (idle click region, reading-mode left/right regions) which are rendered outside the perspective container as siblings. **Exceptions:** `PeopleCloud` bubbles and page-0 `CoverInside` re-enable `pointer-events: auto` when `BookReadingContext` marks them interactive; nav overlays stay behind the 3D scene for peel + click-through on empty areas.
 - **Cover and left-page Caveat** — use `style={{ fontFamily: "var(--font-caveat)" }}` on cover title and `LeftPageText`; do not use `--font-handwritten` for those surfaces.
 - **§5 history vs current** — entries before “Canonical current state” may describe superseded accent borders, Instrument Serif on the cover, or “Read” labelling; trust the canonical table and §1–§4 over older decision bullets.
+
+### 2026-06-01 — Polaroid component; page 2 cleared
+
+- **`Polaroid` design-system primitive** (`src/design-system/components/Polaroid.tsx`). White frame, 8px radius, 1px `border-rule`, 180×140px image, compact Caveat caption. Optional `rotation`: `-3` … `3` degrees (default `0`). Exported from the design-system barrel.
+- **Page 2 (`bookPages[1]`)** — demo `<Polaroid>` on `PolaroidPreview` (sample people portrait, `rotation={-2}`).
 
 ## 8. Quality gates
 

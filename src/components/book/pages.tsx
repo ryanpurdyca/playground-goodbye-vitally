@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { PageSurface } from "@/design-system";
+import { PageSurface, Polaroid } from "@/design-system";
 import { PeopleCloud } from "./PeopleCloud";
 
 /**
@@ -20,12 +20,6 @@ import { PeopleCloud } from "./PeopleCloud";
 
 const caveat = { fontFamily: "var(--font-caveat)" } as const;
 
-function PageHeading({ children }: { children: ReactNode }) {
-  return (
-    <h2 className="text-ink-subtle mb-4 font-mono text-xs tracking-widest uppercase">{children}</h2>
-  );
-}
-
 function ChapterOpen() {
   return (
     <PageSurface className="pointer-events-none overflow-hidden p-0">
@@ -34,15 +28,15 @@ function ChapterOpen() {
   );
 }
 
-function FirstDays() {
+function PolaroidPreview() {
   return (
-    <PageSurface>
-      <PageHeading>The first days</PageHeading>
-      <p className="text-ink leading-relaxed">
-        Replace this with a memory. Each page is its own component — keep the
-        <code className="bg-surface rounded px-1"> PageSurface </code>
-        wrapper and put whatever you like inside.
-      </p>
+    <PageSurface className="items-center justify-center">
+      <Polaroid
+        image="/images/people/img-laura.png"
+        alt="Laura"
+        caption="First week at Vitally"
+        rotation={-2}
+      />
     </PageSurface>
   );
 }
@@ -77,7 +71,7 @@ function PlaceholderPage({ n }: { n: number }) {
 
 export const bookPages: ReactNode[] = [
   <ChapterOpen key="chapter-open" />,
-  <FirstDays key="first-days" />,
+  <PolaroidPreview key="polaroid-preview" />,
   <APhoto key="a-photo" />,
   <AQuote key="a-quote" />,
   ...Array.from({ length: 8 }, (_, i) => <PlaceholderPage key={`placeholder-${i}`} n={i + 5} />),
