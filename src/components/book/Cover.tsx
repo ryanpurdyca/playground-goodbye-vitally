@@ -102,7 +102,7 @@ export function Cover({ openness, closePeelActive = false }: Props) {
   const shimmer = useMotionValue(0);
   useEffect(() => {
     const controls = animate(shimmer, Math.PI * 2, {
-      duration: 9,
+      duration: 5,
       ease: "linear",
       repeat: Infinity,
     });
