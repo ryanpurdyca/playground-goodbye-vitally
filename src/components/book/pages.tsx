@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { PageSurface } from "@/design-system";
+import { PageSurface, Screenshot } from "@/design-system";
 import { BookPolaroid } from "./BookPolaroid";
 import { PeopleCloud } from "./PeopleCloud";
 
@@ -106,12 +106,16 @@ function TwoPolaroids() {
   );
 }
 
-function AQuote() {
+function ScreenshotPage() {
   return (
-    <PageSurface className="items-center justify-center text-center">
-      <p className="text-ink text-2xl leading-snug font-bold" style={caveat}>
-        “A quote that mattered.”
-      </p>
+    <PageSurface className="items-center justify-center p-5 pt-7">
+      <Screenshot
+        image="/images/screenshot/screenshot-1.png"
+        alt="App screenshot"
+        pin={2}
+        rotation={-1}
+        className="w-full"
+      />
     </PageSurface>
   );
 }
@@ -128,6 +132,6 @@ export const bookPages: ReactNode[] = [
   <ChapterOpen key="chapter-open" />,
   <PolaroidPreview key="polaroid-preview" />,
   <TwoPolaroids key="two-polaroids" />,
-  <AQuote key="a-quote" />,
+  <ScreenshotPage key="screenshot-page" />,
   ...Array.from({ length: 8 }, (_, i) => <PlaceholderPage key={`placeholder-${i}`} n={i + 5} />),
 ];
