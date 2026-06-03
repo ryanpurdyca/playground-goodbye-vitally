@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 import { PageSurface } from "@/design-system";
 import { BookPolaroid } from "./BookPolaroid";
 import { PeopleCloud } from "./PeopleCloud";
+import { LeadershipOffsitePageLabels } from "./LeadershipOffsitePageLabels";
 import { NashvilleOffsitePageLabels } from "./NashvilleOffsitePageLabels";
 import { PolaroidPageLabels } from "./PolaroidPageLabels";
 import { SummerOffsitePageLabels } from "./SummerOffsitePageLabels";
@@ -11,6 +12,7 @@ const SPRING_OFFSITE_IMG = "/images/images/2026-spring-offsite";
 const WINTER_OFFSITE_IMG = "/images/images/2026-winter-offsite";
 const NASHVILLE_OFFSITE_IMG = "/images/images/2025-winter-offsite";
 const SUMMER_OFFSITE_IMG = "/images/images/2024-summer-offsite";
+const FALL_2023_OFFSITE_IMG = "/images/images/2023-fall-offsite";
 
 /**
  * The book's content, authored as a flat list of pages.
@@ -217,7 +219,7 @@ function NashvilleOffsitePage6() {
         <BookPolaroid
           bookPageIndex={NASHVILLE_OFFSITE_PAGE_6_FACE}
           className="absolute bottom-10 left-6 z-10"
-          image={`${NASHVILLE_OFFSITE_IMG}/img-2026-02.jpg`}
+          image={`${NASHVILLE_OFFSITE_IMG}/img-2025-02.jpg`}
           alt="Team dinner"
           caption="Team dinner"
           rotation={2}
@@ -239,7 +241,7 @@ function NashvilleOffsitePage7() {
         <BookPolaroid
           bookPageIndex={NASHVILLE_OFFSITE_PAGE_7_FACE}
           className="absolute top-2 left-2 z-30"
-          image={`${NASHVILLE_OFFSITE_IMG}/img-2026-03.jpg`}
+          image={`${NASHVILLE_OFFSITE_IMG}/img-2025-03.jpg`}
           alt="Predators hockey game"
           caption="Predators hockey game"
           rotation={-1}
@@ -249,7 +251,7 @@ function NashvilleOffsitePage7() {
         <BookPolaroid
           bookPageIndex={NASHVILLE_OFFSITE_PAGE_7_FACE}
           className="absolute top-1/2 right-2 z-20 -translate-y-1/2"
-          image={`${NASHVILLE_OFFSITE_IMG}/img-2026-04.jpg`}
+          image={`${NASHVILLE_OFFSITE_IMG}/img-2025-04.jpg`}
           alt="Anomia match"
           caption="Anomia match"
           rotation={1}
@@ -259,7 +261,7 @@ function NashvilleOffsitePage7() {
         <BookPolaroid
           bookPageIndex={NASHVILLE_OFFSITE_PAGE_7_FACE}
           className="absolute bottom-2 left-2 z-10"
-          image={`${NASHVILLE_OFFSITE_IMG}/img-2026-05.jpg`}
+          image={`${NASHVILLE_OFFSITE_IMG}/img-2025-05.jpg`}
           alt="Head to head Scrabble"
           caption="Head to head Scrabble"
           rotation={2}
@@ -281,7 +283,7 @@ function NashvilleOffsitePage8() {
         <BookPolaroid
           bookPageIndex={NASHVILLE_OFFSITE_PAGE_8_FACE}
           className="absolute top-2 left-2 z-30"
-          image={`${NASHVILLE_OFFSITE_IMG}/img-2026-06.jpg`}
+          image={`${NASHVILLE_OFFSITE_IMG}/img-2025-06.jpg`}
           alt="Insanely hot chicken"
           caption="Insanely hot chicken"
           rotation={2}
@@ -291,7 +293,7 @@ function NashvilleOffsitePage8() {
         <BookPolaroid
           bookPageIndex={NASHVILLE_OFFSITE_PAGE_8_FACE}
           className="absolute top-1/2 right-2 z-20 -translate-y-1/2"
-          image={`${NASHVILLE_OFFSITE_IMG}/img-2026-07.jpg`}
+          image={`${NASHVILLE_OFFSITE_IMG}/img-2025-07.jpg`}
           alt="Scooter gang"
           caption="Scooter gang"
           rotation={-1}
@@ -301,7 +303,7 @@ function NashvilleOffsitePage8() {
         <BookPolaroid
           bookPageIndex={NASHVILLE_OFFSITE_PAGE_8_FACE}
           className="absolute bottom-2 left-2 z-10"
-          image={`${NASHVILLE_OFFSITE_IMG}/img-2026-08.JPEG`}
+          image={`${NASHVILLE_OFFSITE_IMG}/img-2025-08.JPEG`}
           alt="Beers and jamming"
           caption="Beers and jamming"
           rotation={1}
@@ -323,7 +325,7 @@ function NashvilleOffsitePage9() {
         <BookPolaroid
           bookPageIndex={NASHVILLE_OFFSITE_PAGE_9_FACE}
           className="absolute top-1 right-1 z-40"
-          image={`${NASHVILLE_OFFSITE_IMG}/img-2026-09.JPEG`}
+          image={`${NASHVILLE_OFFSITE_IMG}/img-2025-09.JPEG`}
           alt="Designers designing"
           caption="Designers designing"
           rotation={3}
@@ -333,7 +335,7 @@ function NashvilleOffsitePage9() {
         <BookPolaroid
           bookPageIndex={NASHVILLE_OFFSITE_PAGE_9_FACE}
           className="absolute top-[22%] left-1 z-35"
-          image={`${NASHVILLE_OFFSITE_IMG}/img-2026-10.jpg`}
+          image={`${NASHVILLE_OFFSITE_IMG}/img-2025-10.jpg`}
           alt="Broadway bar crawl"
           caption="Broadway bar crawl"
           rotation={-2}
@@ -343,7 +345,7 @@ function NashvilleOffsitePage9() {
         <BookPolaroid
           bookPageIndex={NASHVILLE_OFFSITE_PAGE_9_FACE}
           className="absolute top-[61%] right-8 z-30 -translate-y-[42%]"
-          image={`${NASHVILLE_OFFSITE_IMG}/img-2026-11.jpg`}
+          image={`${NASHVILLE_OFFSITE_IMG}/img-2025-11.jpg`}
           alt="First ever honky tonk"
           caption="First ever honky tonk"
           rotation={2}
@@ -353,7 +355,7 @@ function NashvilleOffsitePage9() {
         <BookPolaroid
           bookPageIndex={NASHVILLE_OFFSITE_PAGE_9_FACE}
           className="absolute bottom-2 left-2 z-25"
-          image={`${NASHVILLE_OFFSITE_IMG}/img-2026-12.jpg`}
+          image={`${NASHVILLE_OFFSITE_IMG}/img-2025-12.jpg`}
           alt="Morning after bar crawl"
           caption="Morning after bar crawl"
           rotation={-3}
@@ -376,7 +378,8 @@ function SummerOffsitePage10() {
           bookPageIndex={SUMMER_OFFSITE_PAGE_10_FACE}
           className="absolute top-2 left-2 z-30"
           image={`${SUMMER_OFFSITE_IMG}/img-2024-01.jpg`}
-          alt="Summer 2024 offsite"
+          alt="Roadmap session"
+          caption="Roadmap session"
           rotation={-1}
           tape={1}
           tapeRotation={0}
@@ -386,7 +389,8 @@ function SummerOffsitePage10() {
           bookPageIndex={SUMMER_OFFSITE_PAGE_10_FACE}
           className="absolute top-1/2 left-1/2 z-20 -translate-x-1/2 -translate-y-1/2"
           image={`${SUMMER_OFFSITE_IMG}/img-2024-02.jpg`}
-          alt="Summer 2024 offsite"
+          alt="2hr morning walk"
+          caption="2hr morning walk"
           rotation={1}
           tape={3}
           tapeRotation={-1}
@@ -395,7 +399,8 @@ function SummerOffsitePage10() {
           bookPageIndex={SUMMER_OFFSITE_PAGE_10_FACE}
           className="absolute bottom-2 left-2 z-10"
           image={`${SUMMER_OFFSITE_IMG}/img-2024-03.jpg`}
-          alt="Summer 2024 offsite"
+          alt="Padel match"
+          caption="Padel match"
           rotation={2}
           tape={5}
           tapeRotation={1}
@@ -416,7 +421,8 @@ function SummerOffsitePage11() {
           bookPageIndex={SUMMER_OFFSITE_PAGE_11_FACE}
           className="absolute top-1 left-1 z-40"
           image={`${SUMMER_OFFSITE_IMG}/img-2024-04.jpg`}
-          alt="Summer 2024 offsite"
+          alt="Post padel beers"
+          caption="Post padel beers"
           rotation={3}
           tape={2}
           tapeRotation={2}
@@ -425,7 +431,8 @@ function SummerOffsitePage11() {
           bookPageIndex={SUMMER_OFFSITE_PAGE_11_FACE}
           className="absolute top-[22%] right-1 z-35"
           image={`${SUMMER_OFFSITE_IMG}/img-2024-05.jpg`}
-          alt="Summer 2024 offsite"
+          alt="Late night sushi"
+          caption="Late night sushi"
           rotation={-2}
           tape={1}
           tapeRotation={-2}
@@ -434,7 +441,8 @@ function SummerOffsitePage11() {
           bookPageIndex={SUMMER_OFFSITE_PAGE_11_FACE}
           className="absolute top-[61%] left-8 z-30 -translate-y-[42%]"
           image={`${SUMMER_OFFSITE_IMG}/img-2024-06.jpg`}
-          alt="Summer 2024 offsite"
+          alt="Two bad dart players"
+          caption="Two bad dart players"
           rotation={2}
           tape={4}
           tapeRotation={1}
@@ -443,7 +451,8 @@ function SummerOffsitePage11() {
           bookPageIndex={SUMMER_OFFSITE_PAGE_11_FACE}
           className="absolute right-2 bottom-2 z-25"
           image={`${SUMMER_OFFSITE_IMG}/img-2024-07.PNG`}
-          alt="Summer 2024 offsite"
+          alt="Early night team photo"
+          caption="Early night team photo"
           rotation={-3}
           tape={6}
           tapeRotation={-1}
@@ -464,7 +473,8 @@ function SummerOffsitePage12() {
           bookPageIndex={SUMMER_OFFSITE_PAGE_12_FACE}
           className="absolute top-1 left-1 z-40"
           image={`${SUMMER_OFFSITE_IMG}/img-2024-08.jpg`}
-          alt="Summer 2024 offsite"
+          alt="Late night team photo"
+          caption="Late night team photo"
           rotation={-3}
           tape={2}
           tapeRotation={2}
@@ -473,7 +483,8 @@ function SummerOffsitePage12() {
           bookPageIndex={SUMMER_OFFSITE_PAGE_12_FACE}
           className="absolute top-[22%] right-1 z-35"
           image={`${SUMMER_OFFSITE_IMG}/img-2024-09.jpg`}
-          alt="Summer 2024 offsite"
+          alt="Photo booth pics"
+          caption="Photo booth pics"
           rotation={2}
           tape={1}
           tapeRotation={-2}
@@ -482,7 +493,8 @@ function SummerOffsitePage12() {
           bookPageIndex={SUMMER_OFFSITE_PAGE_12_FACE}
           className="absolute top-[61%] left-8 z-30 -translate-y-[42%]"
           image={`${SUMMER_OFFSITE_IMG}/img-2024-10.jpg`}
-          alt="Summer 2024 offsite"
+          alt="Second dinner of the night"
+          caption="Second dinner of the night"
           rotation={-2}
           tape={4}
           tapeRotation={1}
@@ -491,7 +503,8 @@ function SummerOffsitePage12() {
           bookPageIndex={SUMMER_OFFSITE_PAGE_12_FACE}
           className="absolute right-2 bottom-2 z-25"
           image={`${SUMMER_OFFSITE_IMG}/img-2024-11.jpg`}
-          alt="Summer 2024 offsite"
+          alt="Fancy drinks"
+          caption="Fancy drinks"
           rotation={3}
           tape={6}
           tapeRotation={-1}
@@ -501,10 +514,67 @@ function SummerOffsitePage12() {
   );
 }
 
-function PlaceholderPage({ n }: { n: number }) {
+/** `bookPages` index for this face (sheet 6 verso) — page 13. */
+const LEADERSHIP_OFFSITE_PAGE_13_FACE = 12;
+
+function LeadershipOffsitePage13() {
   return (
-    <PageSurface className="items-center justify-center">
-      <span className="text-ink-subtle font-mono text-sm">Page {n}</span>
+    <PageSurface className="overflow-hidden p-6">
+      <div className="relative size-full">
+        <BookPolaroid
+          bookPageIndex={LEADERSHIP_OFFSITE_PAGE_13_FACE}
+          className="absolute top-10 right-6 z-20"
+          image={`${FALL_2023_OFFSITE_IMG}/img-2023-01.jpg`}
+          alt="First time in Dumbo"
+          caption="First time in Dumbo"
+          rotation={-1}
+          tape={2}
+          tapeRotation={0}
+        />
+        <LeadershipOffsitePageLabels />
+        <BookPolaroid
+          bookPageIndex={LEADERSHIP_OFFSITE_PAGE_13_FACE}
+          className="absolute bottom-10 left-6 z-10"
+          image={`${FALL_2023_OFFSITE_IMG}/img-2023-02.jpg`}
+          alt="Brooklyn Bridge"
+          caption="Brooklyn Bridge"
+          rotation={2}
+          tape={4}
+          tapeRotation={-2}
+        />
+      </div>
+    </PageSurface>
+  );
+}
+
+/** `bookPages` index for this face (sheet 7 recto) — page 14. */
+const LEADERSHIP_OFFSITE_PAGE_14_FACE = 13;
+
+function LeadershipOffsitePage14() {
+  return (
+    <PageSurface className="overflow-hidden p-6">
+      <div className="relative size-full">
+        <BookPolaroid
+          bookPageIndex={LEADERSHIP_OFFSITE_PAGE_14_FACE}
+          className="absolute top-10 right-6 z-20"
+          image={`${FALL_2023_OFFSITE_IMG}/img-2023-03.jpg`}
+          alt="Featherball bar"
+          caption="Featherball bar"
+          rotation={-2}
+          tape={1}
+          tapeRotation={1}
+        />
+        <BookPolaroid
+          bookPageIndex={LEADERSHIP_OFFSITE_PAGE_14_FACE}
+          className="absolute bottom-10 left-6 z-10"
+          image={`${FALL_2023_OFFSITE_IMG}/img-2023-04.jpg`}
+          alt="Sort of team photo"
+          caption="Sort of team photo"
+          rotation={1}
+          tape={5}
+          tapeRotation={-1}
+        />
+      </div>
     </PageSurface>
   );
 }
@@ -522,5 +592,6 @@ export const bookPages: ReactNode[] = [
   <SummerOffsitePage10 key="summer-offsite-page-10" />,
   <SummerOffsitePage11 key="summer-offsite-page-11" />,
   <SummerOffsitePage12 key="summer-offsite-page-12" />,
-  ...Array.from({ length: 1 }, (_, i) => <PlaceholderPage key={`placeholder-${i}`} n={i + 13} />),
+  <LeadershipOffsitePage13 key="leadership-offsite-page-13" />,
+  <LeadershipOffsitePage14 key="leadership-offsite-page-14" />,
 ];

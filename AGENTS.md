@@ -323,13 +323,15 @@ When you add a primitive or token, update this section and add it to the design-
 - **Page 3 (`bookPages[2]`)** — `TwoPolaroids`: _Flip cup tournament_, _Morning work sessions_ (`img-2026-04`, `05`) at upper-right and bottom-left.
 - **Page 4 (`bookPages[3]`)** — `WinterOffsitePage4`: three winter offsite `<Polaroid>`s from `2026-winter-offsite` (`img-2026-06` … `08`) at top-right, center, and bottom-left; labels in the open corners (**Product** / **Team** / **Offsite** top-left, **Winter** / **2026** bottom-right).
 - **Page 5 (`bookPages[4]`)** — `WinterOffsitePage5`: three more winter prints from `2026-winter-offsite` (`img-2026-09` … `11`).
-- **Page 6 (`bookPages[5]`)** — `NashvilleOffsitePage6`: two Nashville PDE offsite `<Polaroid>`s from `2025-winter-offsite` (`img-2025-01.JPEG`, `img-2026-02`) — _PDE team rooftop photo_, _Team dinner_; `NashvilleOffsitePageLabels` (**Nashville** / **PDE** / **Offsite**, **Winter** / **2025**).
-- **Page 7 (`bookPages[6]`)** — `NashvilleOffsitePage7`: _Predators hockey game_, _Anomia match_, _Head to head Scrabble_ (`img-2026-03` … `05`).
-- **Page 8 (`bookPages[7]`)** — `NashvilleOffsitePage8`: _Insanely hot chicken_, _Scooter gang_, _Beers and jamming_ (`img-2026-06` … `08`).
-- **Page 9 (`bookPages[8]`)** — `NashvilleOffsitePage9`: _Designers designing_, _Broadway bar crawl_, _First ever honky tonk_, _Morning after bar crawl_ (`img-2026-09` … `12`); staggered layout.
-- **Page 10 (`bookPages[9]`)** — `SummerOffsitePage10`: three `<Polaroid>`s from `2024-summer-offsite` (`img-2024-01` … `03`) at top-left, center, and bottom-left; `SummerOffsitePageLabels` (**Product** / **Team** / **Offsite**, **Summer** / **2024**, centered).
-- **Page 11 (`bookPages[10]`)** — `SummerOffsitePage11`: four staggered prints from `2024-summer-offsite` (`img-2024-04` … `07`).
-- **Page 12 (`bookPages[11]`)** — `SummerOffsitePage12`: four staggered prints from `2024-summer-offsite` (`img-2024-08` … `11`); mirror-ish layout of page 11.
+- **Page 6 (`bookPages[5]`)** — `NashvilleOffsitePage6`: two Nashville PDE offsite `<Polaroid>`s from `2025-winter-offsite` (`img-2025-01.JPEG`, `img-2025-02`) — _PDE team rooftop photo_, _Team dinner_; `NashvilleOffsitePageLabels` (**Nashville** / **PDE** / **Offsite**, **Winter** / **2025**).
+- **Page 7 (`bookPages[6]`)** — `NashvilleOffsitePage7`: _Predators hockey game_, _Anomia match_, _Head to head Scrabble_ (`img-2025-03` … `05`).
+- **Page 8 (`bookPages[7]`)** — `NashvilleOffsitePage8`: _Insanely hot chicken_, _Scooter gang_, _Beers and jamming_ (`img-2025-06` … `08`).
+- **Page 9 (`bookPages[8]`)** — `NashvilleOffsitePage9`: _Designers designing_, _Broadway bar crawl_, _First ever honky tonk_, _Morning after bar crawl_ (`img-2025-09` … `12`); staggered layout.
+- **Page 10 (`bookPages[9]`)** — `SummerOffsitePage10`: _Roadmap session_, _2hr morning walk_, _Padel match_ (`img-2024-01` … `03`); `SummerOffsitePageLabels` (**Product** / **Team** / **Offsite**, **Summer** / **2024**, centered).
+- **Page 11 (`bookPages[10]`)** — `SummerOffsitePage11`: _Post padel beers_, _Late night sushi_, _Two bad dart players_, _Early night team photo_ (`img-2024-04` … `07`).
+- **Page 12 (`bookPages[11]`)** — `SummerOffsitePage12`: _Late night team photo_, _Photo booth pics_, _Second dinner of the night_, _Fancy drinks_ (`img-2024-08` … `11`).
+- **Page 13 (`bookPages[12]`)** — `LeadershipOffsitePage13`: _First time in Dumbo_, _Brooklyn Bridge_ (`2023-fall-offsite` `img-2023-01`, `02`); `LeadershipOffsitePageLabels` (**Leadership** / **Offsite**, **Fall** / **2023**).
+- **Page 14 (`bookPages[13]`)** — `LeadershipOffsitePage14`: _Featherball bar_, _Sort of team photo_ (`img-2023-03`, `04`).
 
 ### 2026-06-03 — Polaroid View cursor: direct tracking + lightbox gate
 
