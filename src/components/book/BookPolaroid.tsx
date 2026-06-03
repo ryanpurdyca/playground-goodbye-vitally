@@ -34,6 +34,7 @@ export function BookPolaroid({
         image={image}
         alt={alt}
         caption={caption}
+        showViewCursor={interactive}
         className={cn(
           interactive ? "pointer-events-auto cursor-pointer" : "pointer-events-none",
           className,
