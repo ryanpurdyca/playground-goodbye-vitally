@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import { Tooltip } from "@/design-system";
+import { cn, Tooltip } from "@/design-system";
 import {
   PEOPLE_CLOUD_AREA_FILL,
   PEOPLE_CLOUD_EDGE_PAD_PX,
@@ -115,17 +115,69 @@ function seedHomeLayout(width: number, height: number, baseR: number): SimBubble
   return bubbles;
 }
 
+/** 3D-tilted circles project as ellipses; use the painted AABB as an ellipse hit target. */
+function pointerInEllipse(clientX: number, clientY: number, box: DOMRect, scale = 1): boolean {
+  const rx = (box.width / 2) * scale;
+  const ry = (box.height / 2) * scale;
+  if (rx < 1 || ry < 1) return false;
+  const cx = box.left + box.width / 2;
+  const cy = box.top + box.height / 2;
+  const dx = clientX - cx;
+  const dy = clientY - cy;
+  return (dx * dx) / (rx * rx) + (dy * dy) / (ry * ry) <= 1;
+}
+
+function pointerInCloud(clientX: number, clientY: number, container: HTMLElement): boolean {
+  const box = container.getBoundingClientRect();
+  return clientX >= box.left && clientX <= box.right && clientY >= box.top && clientY <= box.bottom;
+}
+
+/** Closest bubble under the pointer (screen-space ellipse), with sticky hover during peel/animation. */
+function hitTestBubble(
+  clientX: number,
+  clientY: number,
+  bubbleRefs: Map<string, HTMLDivElement>,
+  stickyId: string | null,
+): { id: string } | null {
+  let best: { id: string; dist: number } | null = null;
+  for (const [id, el] of bubbleRefs) {
+    const box = el.getBoundingClientRect();
+    if (!pointerInEllipse(clientX, clientY, box, 1.02)) continue;
+    const cx = box.left + box.width / 2;
+    const cy = box.top + box.height / 2;
+    const dist = Math.hypot(clientX - cx, clientY - cy);
+    if (!best || dist < best.dist) {
+      best = { id, dist };
+    }
+  }
+  if (best) return { id: best.id };
+
+  if (stickyId) {
+    const el = bubbleRefs.get(stickyId);
+    if (el && pointerInEllipse(clientX, clientY, el.getBoundingClientRect(), 1.12)) {
+      return { id: stickyId };
+    }
+  }
+  return null;
+}
+
 export function PeopleCloud() {
   const readingNav = useBookReadingNav();
   const interactive = readingNav?.peopleCloudInteractive ?? false;
   const containerRef = useRef<HTMLDivElement>(null);
   const bubbleRefs = useRef<Map<string, HTMLDivElement>>(new Map());
+  const layoutSizeRef = useRef({ width: 0, height: 0 });
+  const hoveredIdRef = useRef<string | null>(null);
 
   const [homeBubbles, setHomeBubbles] = useState<SimBubble[]>([]);
   const [baseR, setBaseR] = useState(0);
   const [size, setSize] = useState({ width: 0, height: 0 });
   const [hoveredId, setHoveredId] = useState<string | null>(null);
   const [tooltipViewport, setTooltipViewport] = useState<{ x: number; y: number } | null>(null);
+
+  useEffect(() => {
+    hoveredIdRef.current = hoveredId;
+  }, [hoveredId]);
 
   const activeHoveredId = interactive ? hoveredId : null;
 
@@ -142,10 +194,18 @@ export function PeopleCloud() {
     if (!el) return;
 
     const measure = () => {
-      const { width, height } = el.getBoundingClientRect();
-      if (width > 0 && height > 0) {
-        initLayout(width, height);
-      }
+      const width = Math.round(el.clientWidth);
+      const height = Math.round(el.clientHeight);
+      if (width <= 0 || height <= 0) return;
+
+      const prev = layoutSizeRef.current;
+      const dw = Math.abs(width - prev.width);
+      const dh = Math.abs(height - prev.height);
+      if (prev.width > 0 && dw < 12 && dh < 12) return;
+      if (hoveredIdRef.current) return;
+
+      layoutSizeRef.current = { width, height };
+      initLayout(width, height);
     };
 
     measure();
@@ -160,6 +220,39 @@ export function PeopleCloud() {
     if (el) bubbleRefs.current.set(id, el);
     else bubbleRefs.current.delete(id);
   }, []);
+
+  const updateHoverFromPointer = useCallback(
+    (clientX: number, clientY: number) => {
+      const hit = hitTestBubble(clientX, clientY, bubbleRefs.current, hoveredIdRef.current);
+      const nextId = hit?.id ?? null;
+      setHoveredId((prev) => {
+        if (prev === nextId) return prev;
+        if (nextId && prev === null) readingNav?.onRightPagePointer();
+        return nextId;
+      });
+      if (!nextId) setTooltipViewport(null);
+    },
+    [readingNav],
+  );
+
+  useEffect(() => {
+    if (!interactive) return;
+
+    const onPointerMove = (e: PointerEvent) => {
+      const el = containerRef.current;
+      if (!el || !pointerInCloud(e.clientX, e.clientY, el)) {
+        if (hoveredIdRef.current) {
+          setHoveredId(null);
+          setTooltipViewport(null);
+        }
+        return;
+      }
+      updateHoverFromPointer(e.clientX, e.clientY);
+    };
+
+    window.addEventListener("pointermove", onPointerMove, { passive: true });
+    return () => window.removeEventListener("pointermove", onPointerMove);
+  }, [interactive, updateHoverFromPointer]);
 
   useEffect(() => {
     if (!activeHoveredId) return;
@@ -190,54 +283,49 @@ export function PeopleCloud() {
   return (
     <div
       ref={containerRef}
-      className="pointer-events-none absolute inset-0"
+      className={cn(
+        "absolute inset-0",
+        interactive ? "pointer-events-auto" : "pointer-events-none",
+      )}
       data-testid="people-cloud"
+      onClick={
+        interactive
+          ? (e) => {
+              const hit = hitTestBubble(
+                e.clientX,
+                e.clientY,
+                bubbleRefs.current,
+                hoveredIdRef.current,
+              );
+              if (hit) readingNav?.onRightPageClick();
+            }
+          : undefined
+      }
     >
       {size.width > 0 &&
         baseR > 0 &&
-        homeBubbles.map((b) => {
+        homeBubbles.map((b, index) => {
           const d = baseR * 2;
           return (
             <div
               key={b.id}
               ref={(el) => setBubbleRef(b.id, el)}
               data-people-bubble
-              className={
-                interactive
-                  ? "pointer-events-auto absolute overflow-hidden rounded-full"
-                  : "pointer-events-none absolute overflow-hidden rounded-full"
-              }
+              className="pointer-events-none absolute overflow-hidden rounded-full"
               style={{
                 left: b.homeX - baseR,
                 top: b.homeY - baseR,
                 width: d,
                 height: d,
-                zIndex: b.id === activeHoveredId ? 20 : 1,
+                zIndex: index + 1,
               }}
-              onMouseEnter={
-                interactive
-                  ? () => {
-                      setHoveredId(b.id);
-                      readingNav?.onRightPagePointer();
-                    }
-                  : undefined
-              }
-              onClick={interactive ? () => readingNav?.onRightPageClick() : undefined}
-              onMouseLeave={
-                interactive
-                  ? () => {
-                      setHoveredId(null);
-                      setTooltipViewport(null);
-                    }
-                  : undefined
-              }
             >
               <Image
                 src={b.src}
                 alt={b.name}
                 fill
                 sizes={`${Math.ceil(d)}px`}
-                className="object-cover"
+                className="pointer-events-none object-cover"
                 draggable={false}
               />
             </div>
