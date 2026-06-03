@@ -15,8 +15,8 @@ import {
 import { useBookReadingNav } from "./BookReadingContext";
 import { people, type Person } from "./people";
 
-/** Matches Tooltip / Popover fade duration (`--duration-fast`). */
-const HOVER_CHROME_FADE_MS = 160;
+/** Matches Tooltip / Popover fade duration. */
+const HOVER_CHROME_FADE_MS = 220;
 
 type HoverChrome = {
   id: string;

@@ -3,7 +3,7 @@
 import { motion } from "framer-motion";
 import { cn } from "../cn";
 
-const FADE_TRANSITION = { duration: 0.16, ease: [0.22, 0.61, 0.36, 1] as const };
+const FADE_TRANSITION = { duration: 0.22, ease: [0.22, 0.61, 0.36, 1] as const };
 
 type Props = {
   label: string;

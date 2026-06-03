@@ -4,7 +4,9 @@ import { motion } from "framer-motion";
 import type { ReactNode } from "react";
 import { cn } from "../cn";
 
-const FADE_TRANSITION = { duration: 0.16, ease: [0.22, 0.61, 0.36, 1] as const };
+const POPOVER_TRANSITION = { duration: 0.22, ease: [0.22, 0.61, 0.36, 1] as const };
+/** Extra Y (px) when hidden — slides up into place on show, down on hide. */
+const SLIDE_OFFSET_PX = 6;
 
 type Props = {
   /** Center X in the positioning parent's coordinate space (px). */
@@ -32,12 +34,18 @@ export function Popover({
   gapPx = 8,
   className,
 }: Props) {
+  const restY = gapPx + SLIDE_OFFSET_PX;
+
   return (
     <motion.div
       aria-hidden={!visible}
-      initial={{ opacity: 0 }}
-      animate={{ opacity: visible ? 1 : 0 }}
-      transition={FADE_TRANSITION}
+      initial={{ opacity: 0, x: "-50%", y: restY }}
+      animate={{
+        opacity: visible ? 1 : 0,
+        x: "-50%",
+        y: visible ? gapPx : restY,
+      }}
+      transition={POPOVER_TRANSITION}
       className={cn(
         "border-rule bg-surface text-ink pointer-events-none z-50 rounded-sm border px-2 py-1.5 text-xs shadow-[0_2px_8px_var(--color-paper-shadow)]",
         position === "fixed" ? "fixed" : "absolute",
@@ -46,7 +54,6 @@ export function Popover({
       style={{
         left: x,
         top: anchorBottom,
-        transform: `translate(-50%, ${gapPx}px)`,
       }}
     >
       {children}
