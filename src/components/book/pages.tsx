@@ -2,11 +2,13 @@ import type { ReactNode } from "react";
 import { PageSurface } from "@/design-system";
 import { BookPolaroid } from "./BookPolaroid";
 import { PeopleCloud } from "./PeopleCloud";
+import { NashvilleOffsitePageLabels } from "./NashvilleOffsitePageLabels";
 import { PolaroidPageLabels } from "./PolaroidPageLabels";
 import { WinterOffsitePageLabels } from "./WinterOffsitePageLabels";
 
 const SPRING_OFFSITE_IMG = "/images/images/2026-spring-offsite";
 const WINTER_OFFSITE_IMG = "/images/images/2026-winter-offsite";
+const NASHVILLE_OFFSITE_IMG = "/images/images/2022-winter-offsite";
 
 /**
  * The book's content, authored as a flat list of pages.
@@ -192,6 +194,163 @@ function WinterOffsitePage5() {
   );
 }
 
+/** `bookPages` index for this face (sheet 2 verso) — page 6. */
+const NASHVILLE_OFFSITE_PAGE_6_FACE = 5;
+
+function NashvilleOffsitePage6() {
+  return (
+    <PageSurface className="overflow-hidden p-6">
+      <div className="relative size-full">
+        <BookPolaroid
+          bookPageIndex={NASHVILLE_OFFSITE_PAGE_6_FACE}
+          className="absolute top-10 right-6 z-20"
+          image={`${NASHVILLE_OFFSITE_IMG}/img-2022-01.jpg`}
+          alt="Nashville PDE offsite"
+          rotation={-1}
+          tape={2}
+          tapeRotation={0}
+        />
+        <NashvilleOffsitePageLabels />
+        <BookPolaroid
+          bookPageIndex={NASHVILLE_OFFSITE_PAGE_6_FACE}
+          className="absolute bottom-10 left-6 z-10"
+          image={`${NASHVILLE_OFFSITE_IMG}/img-2022-02.jpg`}
+          alt="Nashville PDE offsite"
+          rotation={2}
+          tape={4}
+          tapeRotation={-2}
+        />
+      </div>
+    </PageSurface>
+  );
+}
+
+/** `bookPages` index for this face (sheet 3 recto) — page 7. */
+const NASHVILLE_OFFSITE_PAGE_7_FACE = 6;
+
+function NashvilleOffsitePage7() {
+  return (
+    <PageSurface className="overflow-hidden p-6">
+      <div className="relative size-full">
+        <BookPolaroid
+          bookPageIndex={NASHVILLE_OFFSITE_PAGE_7_FACE}
+          className="absolute top-2 left-2 z-30"
+          image={`${NASHVILLE_OFFSITE_IMG}/img-2022-03.jpg`}
+          alt="Nashville PDE offsite"
+          rotation={-1}
+          tape={1}
+          tapeRotation={0}
+        />
+        <BookPolaroid
+          bookPageIndex={NASHVILLE_OFFSITE_PAGE_7_FACE}
+          className="absolute top-1/2 right-2 z-20 -translate-y-1/2"
+          image={`${NASHVILLE_OFFSITE_IMG}/img-2022-04.jpg`}
+          alt="Nashville PDE offsite"
+          rotation={1}
+          tape={3}
+          tapeRotation={-2}
+        />
+        <BookPolaroid
+          bookPageIndex={NASHVILLE_OFFSITE_PAGE_7_FACE}
+          className="absolute bottom-2 left-2 z-10"
+          image={`${NASHVILLE_OFFSITE_IMG}/img-2022-05.jpg`}
+          alt="Nashville PDE offsite"
+          rotation={2}
+          tape={5}
+          tapeRotation={1}
+        />
+      </div>
+    </PageSurface>
+  );
+}
+
+/** `bookPages` index for this face (sheet 3 verso) — page 8. */
+const NASHVILLE_OFFSITE_PAGE_8_FACE = 7;
+
+function NashvilleOffsitePage8() {
+  return (
+    <PageSurface className="overflow-hidden p-6">
+      <div className="relative size-full">
+        <BookPolaroid
+          bookPageIndex={NASHVILLE_OFFSITE_PAGE_8_FACE}
+          className="absolute top-2 left-2 z-30"
+          image={`${NASHVILLE_OFFSITE_IMG}/img-2022-06.jpg`}
+          alt="Nashville PDE offsite"
+          rotation={2}
+          tape={1}
+          tapeRotation={-1}
+        />
+        <BookPolaroid
+          bookPageIndex={NASHVILLE_OFFSITE_PAGE_8_FACE}
+          className="absolute top-1/2 right-2 z-20 -translate-y-1/2"
+          image={`${NASHVILLE_OFFSITE_IMG}/img.png`}
+          alt="Nashville PDE offsite"
+          rotation={-1}
+          tape={3}
+          tapeRotation={1}
+        />
+        <BookPolaroid
+          bookPageIndex={NASHVILLE_OFFSITE_PAGE_8_FACE}
+          className="absolute bottom-2 left-2 z-10"
+          image={`${NASHVILLE_OFFSITE_IMG}/img-2022-02.jpg`}
+          alt="Nashville PDE offsite"
+          rotation={1}
+          tape={5}
+          tapeRotation={0}
+        />
+      </div>
+    </PageSurface>
+  );
+}
+
+/** `bookPages` index for this face (sheet 4 recto) — page 9. */
+const NASHVILLE_OFFSITE_PAGE_9_FACE = 8;
+
+function NashvilleOffsitePage9() {
+  return (
+    <PageSurface className="overflow-hidden p-6">
+      <div className="relative size-full">
+        <BookPolaroid
+          bookPageIndex={NASHVILLE_OFFSITE_PAGE_9_FACE}
+          className="absolute top-1 right-1 z-40"
+          image={`${NASHVILLE_OFFSITE_IMG}/img-2022-01.jpg`}
+          alt="Nashville PDE offsite"
+          rotation={3}
+          tape={2}
+          tapeRotation={2}
+        />
+        <BookPolaroid
+          bookPageIndex={NASHVILLE_OFFSITE_PAGE_9_FACE}
+          className="absolute top-[22%] left-1 z-35"
+          image={`${NASHVILLE_OFFSITE_IMG}/img-2022-04.jpg`}
+          alt="Nashville PDE offsite"
+          rotation={-2}
+          tape={1}
+          tapeRotation={-2}
+        />
+        <BookPolaroid
+          bookPageIndex={NASHVILLE_OFFSITE_PAGE_9_FACE}
+          className="absolute top-[61%] right-8 z-30 -translate-y-[42%]"
+          image={`${NASHVILLE_OFFSITE_IMG}/img-2022-03.jpg`}
+          alt="Nashville PDE offsite"
+          rotation={2}
+          tape={4}
+          tapeRotation={1}
+        />
+        <BookPolaroid
+          bookPageIndex={NASHVILLE_OFFSITE_PAGE_9_FACE}
+          className="absolute bottom-2 left-2 z-25"
+          image={`${NASHVILLE_OFFSITE_IMG}/img-2022-05.jpg`}
+          alt="Nashville PDE offsite"
+          rotation={-3}
+          tape={6}
+          tapeRotation={-1}
+        />
+      </div>
+    </PageSurface>
+  );
+}
+
 function PlaceholderPage({ n }: { n: number }) {
   return (
     <PageSurface className="items-center justify-center">
@@ -206,5 +365,9 @@ export const bookPages: ReactNode[] = [
   <TwoPolaroids key="two-polaroids" />,
   <WinterOffsitePage4 key="winter-offsite-page-4" />,
   <WinterOffsitePage5 key="winter-offsite-page-5" />,
-  ...Array.from({ length: 8 }, (_, i) => <PlaceholderPage key={`placeholder-${i}`} n={i + 6} />),
+  <NashvilleOffsitePage6 key="nashville-offsite-page-6" />,
+  <NashvilleOffsitePage7 key="nashville-offsite-page-7" />,
+  <NashvilleOffsitePage8 key="nashville-offsite-page-8" />,
+  <NashvilleOffsitePage9 key="nashville-offsite-page-9" />,
+  ...Array.from({ length: 4 }, (_, i) => <PlaceholderPage key={`placeholder-${i}`} n={i + 10} />),
 ];

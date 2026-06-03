@@ -50,6 +50,8 @@ export function Book() {
   const [polaroidPreviewLabelsKey, setPolaroidPreviewLabelsKey] = useState(0);
   const [winterOffsiteLabelsPlay, setWinterOffsiteLabelsPlay] = useState(false);
   const [winterOffsiteLabelsKey, setWinterOffsiteLabelsKey] = useState(0);
+  const [nashvilleOffsiteLabelsPlay, setNashvilleOffsiteLabelsPlay] = useState(false);
+  const [nashvilleOffsiteLabelsKey, setNashvilleOffsiteLabelsKey] = useState(0);
   const [polaroidLightboxOpen, setPolaroidLightboxOpen] = useState(false);
 
   // Refs mirror state so event handlers registered once always see current values.
@@ -102,9 +104,16 @@ export function Book() {
       setPolaroidPreviewLabelsPlay(false);
       setWinterOffsiteLabelsPlay(true);
       setWinterOffsiteLabelsKey((k) => k + 1);
+      setNashvilleOffsiteLabelsPlay(false);
+    } else if (from === 2 && to === 3) {
+      setPolaroidPreviewLabelsPlay(false);
+      setWinterOffsiteLabelsPlay(false);
+      setNashvilleOffsiteLabelsPlay(true);
+      setNashvilleOffsiteLabelsKey((k) => k + 1);
     } else {
       setPolaroidPreviewLabelsPlay(false);
       setWinterOffsiteLabelsPlay(false);
+      setNashvilleOffsiteLabelsPlay(false);
     }
     setCurrentPageSync(to);
   }, []);
@@ -112,6 +121,7 @@ export function Book() {
   const goToPrevPage = useCallback(() => {
     setPolaroidPreviewLabelsPlay(false);
     setWinterOffsiteLabelsPlay(false);
+    setNashvilleOffsiteLabelsPlay(false);
     setCurrentPageSync(Math.max(currentPageRef.current - 1, 0));
   }, []);
 
@@ -122,6 +132,7 @@ export function Book() {
     setCurrentPageSync(0);
     setPolaroidPreviewLabelsPlay(false);
     setWinterOffsiteLabelsPlay(false);
+    setNashvilleOffsiteLabelsPlay(false);
     setPolaroidLightboxOpen(false);
     setIsClosing(false);
     setHoveringBook(false);
@@ -151,6 +162,7 @@ export function Book() {
     const finishClose = () => {
       setPolaroidPreviewLabelsPlay(false);
       setWinterOffsiteLabelsPlay(false);
+      setNashvilleOffsiteLabelsPlay(false);
       setPolaroidLightboxOpen(false);
       setModeSync("idle");
       setIsClosing(false);
@@ -285,6 +297,9 @@ export function Book() {
       winterOffsiteLabelsAnimate:
         mode === "reading" && currentPage === 2 && winterOffsiteLabelsPlay,
       winterOffsiteLabelsKey,
+      nashvilleOffsiteLabelsAnimate:
+        mode === "reading" && currentPage === 3 && nashvilleOffsiteLabelsPlay,
+      nashvilleOffsiteLabelsKey,
       polaroidLightboxOpen,
       setPolaroidLightboxOpen,
     }),
@@ -295,6 +310,8 @@ export function Book() {
       polaroidPreviewLabelsKey,
       winterOffsiteLabelsPlay,
       winterOffsiteLabelsKey,
+      nashvilleOffsiteLabelsPlay,
+      nashvilleOffsiteLabelsKey,
       polaroidLightboxOpen,
       goToNextPage,
       goToPrevPage,

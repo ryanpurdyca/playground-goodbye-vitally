@@ -323,6 +323,10 @@ When you add a primitive or token, update this section and add it to the design-
 - **Page 3 (`bookPages[2]`)** — `TwoPolaroids`: _Flip cup tournament_, _Morning work sessions_ (`img-2026-04`, `05`) at upper-right and bottom-left.
 - **Page 4 (`bookPages[3]`)** — `WinterOffsitePage4`: three winter offsite `<Polaroid>`s from `2026-winter-offsite` (`img-2026-06` … `08`) at top-right, center, and bottom-left; labels in the open corners (**Product** / **Team** / **Offsite** top-left, **Winter** / **2026** bottom-right).
 - **Page 5 (`bookPages[4]`)** — `WinterOffsitePage5`: three more winter prints from `2026-winter-offsite` (`img-2026-09` … `11`).
+- **Page 6 (`bookPages[5]`)** — `NashvilleOffsitePage6`: two Nashville PDE offsite `<Polaroid>`s from `2022-winter-offsite` (`img-2022-01`, `02`) at upper-right and bottom-left; `NashvilleOffsitePageLabels` (**Nashville** / **PDE** / **Offsite** centered, **Winter** / **2025** up-right).
+- **Page 7 (`bookPages[6]`)** — `NashvilleOffsitePage7`: three more prints from `2022-winter-offsite` (`img-2022-03` … `05`).
+- **Page 8 (`bookPages[7]`)** — `NashvilleOffsitePage8`: three prints from `2022-winter-offsite` (`img-2022-06`, `img.png`, `img-2022-02`) at top-left, middle-right, and bottom-left.
+- **Page 9 (`bookPages[8]`)** — `NashvilleOffsitePage9`: four loose prints from `2022-winter-offsite` (`img-2022-01`, `04`, `03`, `05`) scattered top-right, upper-left, mid-right, and lower-left (mirror-ish of page 8, intentionally offset).
 
 ### 2026-06-03 — Polaroid View cursor: direct tracking + lightbox gate
 
@@ -334,7 +338,7 @@ When you add a primitive or token, update this section and add it to the design-
 - **`ImageLightbox`** (`src/design-system/components/ImageLightbox.tsx`) — portaled scrim + enlarged photo; Escape / backdrop / Close; body scroll lock.
 - **`BookPolaroid`** opens the lightbox on click instead of `onPageFaceClick` so prints are viewable without advancing the book.
 - **Active-face gating.** Each `BookPolaroid` takes `bookPageIndex` (`bookPages` flat index). `isPolaroidFaceActive` enables `pointer-events` only on the current spread (right `2 × currentPage`, left `2 × currentPage − 1`). Buried 3D faces stay inert; lightbox closes when the spread changes.
-- **Polaroid spread labels.** `SpreadPageLabels` (shared layout) powers `PolaroidPageLabels` (`bookPages[1]`) and `WinterOffsitePageLabels` (`bookPages[3]`). Spring spread animates on reading page 0 → 1 (`polaroidPreviewLabelsAnimate`); winter spread on 1 → 2 (`winterOffsiteLabelsAnimate`). Otherwise static Caveat. Top block first, then bottom; 0.35s initial delay (`SpreadPageLabels.tsx`, not `constants.ts`).
+- **Polaroid spread labels.** `SpreadPageLabels` (shared layout) powers `PolaroidPageLabels` (`bookPages[1]`), `WinterOffsitePageLabels` (`bookPages[3]`), and `NashvilleOffsitePageLabels` (`bookPages[5]`). Spring spread animates on reading page 0 → 1 (`polaroidPreviewLabelsAnimate`); winter spread on 1 → 2 (`winterOffsiteLabelsAnimate`); Nashville spread on 2 → 3 (`nashvilleOffsiteLabelsAnimate`). Otherwise static Caveat. Top block first, then bottom; 0.35s initial delay (`SpreadPageLabels.tsx`, not `constants.ts`).
 
 ## 8. Quality gates
 

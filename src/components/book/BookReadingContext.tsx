@@ -24,6 +24,10 @@ export type BookReadingNav = {
   winterOffsiteLabelsAnimate: boolean;
   /** Bumps on each 1 → 2 advance so handwriting can replay. */
   winterOffsiteLabelsKey: number;
+  /** True once after advancing from reading page 2 → 3 (Next or right-page click). */
+  nashvilleOffsiteLabelsAnimate: boolean;
+  /** Bumps on each 2 → 3 advance so handwriting can replay. */
+  nashvilleOffsiteLabelsKey: number;
   /** True while any polaroid lightbox on the active spread is open. */
   polaroidLightboxOpen: boolean;
   setPolaroidLightboxOpen: (open: boolean) => void;
