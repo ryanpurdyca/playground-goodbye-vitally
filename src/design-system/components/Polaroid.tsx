@@ -111,7 +111,7 @@ export function Polaroid({
     animate(cursorOpacity, cursorVisible ? 1 : 0, { duration: 0.15 });
   }, [cursorVisible, cursorOpacity]);
 
-  const handleImagePointerMove = (e: PointerEvent<HTMLDivElement>) => {
+  const handleImagePointerMove = (e: PointerEvent<HTMLImageElement>) => {
     if (!showViewCursor) return;
     if (!hasSnappedRef.current) {
       hasSnappedRef.current = true;
@@ -122,7 +122,11 @@ export function Polaroid({
     rawY.set(e.clientY);
   };
 
-  const handleImagePointerLeave = () => {
+  const handleImagePointerLeave = (e: PointerEvent<HTMLImageElement>) => {
+    // Ignore leave events when moving to a child (shouldn't happen on img) or
+    // when the pointer is still over this image (e.g. sub-pixel / transformed bounds).
+    const related = e.relatedTarget;
+    if (related instanceof Node && e.currentTarget.contains(related)) return;
     setImageHovered(false);
     hasSnappedRef.current = false;
   };
@@ -154,20 +158,22 @@ export function Polaroid({
           />
         )}
 
-        <div
-          className={cn(
-            "border-rule relative mx-1.5 mt-1.5 h-[108px] w-[140px] overflow-hidden rounded-[3px] border",
-            showViewCursor && "cursor-pointer",
-          )}
-          onPointerEnter={() => showViewCursor && setImageHovered(true)}
-          onPointerLeave={handleImagePointerLeave}
-          onPointerMove={handleImagePointerMove}
-        >
+        <div className="border-rule relative mx-1.5 mt-1.5 h-[108px] w-[140px] overflow-hidden rounded-[3px] border">
           <img
             src={image}
             alt={alt}
-            className="absolute inset-0 h-full w-full object-cover transition-transform duration-300 ease-out group-hover:scale-110"
+            className={cn(
+              "absolute inset-0 h-full w-full object-cover transition-transform duration-300 ease-out group-hover:scale-110",
+              showViewCursor && "pointer-events-auto cursor-pointer",
+            )}
             draggable={false}
+            onPointerEnter={(e) => {
+              if (!showViewCursor) return;
+              setImageHovered(true);
+              handleImagePointerMove(e);
+            }}
+            onPointerLeave={handleImagePointerLeave}
+            onPointerMove={handleImagePointerMove}
           />
         </div>
 

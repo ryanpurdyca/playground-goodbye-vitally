@@ -34,11 +34,8 @@ export function BookPolaroid({
         image={image}
         alt={alt}
         caption={caption}
-        showViewCursor={interactive}
-        className={cn(
-          interactive ? "pointer-events-auto cursor-pointer" : "pointer-events-none",
-          className,
-        )}
+        showViewCursor={interactive && !isLightboxOpen}
+        className={cn(interactive ? "pointer-events-auto" : "pointer-events-none", className)}
         onClick={(e) => {
           if (!interactive) return;
           onClick?.(e);

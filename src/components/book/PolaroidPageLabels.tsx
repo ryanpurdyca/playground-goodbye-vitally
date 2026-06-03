@@ -7,13 +7,13 @@ import {
 } from "@/design-system";
 import { useBookReadingNav } from "./BookReadingContext";
 
-/** Delay before Autocamp / 2026 Offsite labels begin (after page flip). Lives here to avoid constants → pages import cycle. */
+/** Delay before Autocamp / Spring 2026 labels begin (after page flip). Lives here to avoid constants → pages import cycle. */
 const POLAROID_LABEL_HANDWRITING_DELAY_S = 0.35;
 
 const labelClass = "text-ink text-2xl leading-snug";
 
-const AUTOCAMP_LINES = ["Autocamp", "Catskills"] as const;
-const OFFSITE_LINES = ["2026", "Offsite"] as const;
+const AUTOCAMP_LINES = ["Autocamp", "Catskills", "Offsite"] as const;
+const OFFSITE_LINES = ["Spring", "2026"] as const;
 
 /** Seconds for one line's letters to finish animating. */
 function lineDurationS(text: string): number {
@@ -79,7 +79,7 @@ function LabelBlock({ lines, animate, animationKey, startDelayS }: LabelBlockPro
   );
 }
 
-/** Autocamp / Catskills + 2026 Offsite labels on the polaroid preview spread (bookPages[1]). */
+/** Autocamp / Catskills / Offsite + Spring 2026 labels on the polaroid preview spread (bookPages[1]). */
 export function PolaroidPageLabels() {
   const readingNav = useBookReadingNav();
   const animate = readingNav?.polaroidPreviewLabelsAnimate ?? false;
@@ -87,7 +87,7 @@ export function PolaroidPageLabels() {
 
   return (
     <>
-      <div className="pointer-events-none absolute top-2 right-2 bottom-[calc(50%-5.5rem)] left-[10.5rem] z-25 flex items-start justify-center pt-5">
+      <div className="pointer-events-none absolute top-0 right-2 bottom-[calc(50%-4.5rem)] left-[10.5rem] z-25 flex items-start justify-center pt-1">
         <LabelBlock
           lines={AUTOCAMP_LINES}
           animate={animate}
@@ -95,7 +95,7 @@ export function PolaroidPageLabels() {
           startDelayS={POLAROID_LABEL_HANDWRITING_DELAY_S}
         />
       </div>
-      <div className="pointer-events-none absolute top-[calc(50%+4.5rem)] right-2 bottom-2 left-[10.5rem] z-15 flex items-center justify-center">
+      <div className="pointer-events-none absolute top-[calc(50%+4rem)] right-2 bottom-2 left-[10.5rem] z-15 flex items-center justify-center">
         <LabelBlock
           lines={OFFSITE_LINES}
           animate={animate}
