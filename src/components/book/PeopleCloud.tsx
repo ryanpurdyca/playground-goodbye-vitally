@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import { cn, Popover, Tooltip } from "@/design-system";
+import { Popover, Tooltip } from "@/design-system";
 import {
   PEOPLE_CLOUD_AREA_FILL,
   PEOPLE_CLOUD_EDGE_PAD_PX,
@@ -340,24 +340,8 @@ export function PeopleCloud() {
   return (
     <div
       ref={containerRef}
-      className={cn(
-        "absolute inset-0",
-        interactive ? "pointer-events-auto" : "pointer-events-none",
-      )}
+      className="pointer-events-none absolute inset-0"
       data-testid="people-cloud"
-      onClick={
-        interactive
-          ? (e) => {
-              const hit = hitTestBubble(
-                e.clientX,
-                e.clientY,
-                bubbleRefs.current,
-                hoveredIdRef.current,
-              );
-              if (hit) readingNav?.onRightPageClick();
-            }
-          : undefined
-      }
     >
       {size.width > 0 &&
         baseR > 0 &&
@@ -400,7 +384,7 @@ export function PeopleCloud() {
               x={chromeAnchor.x}
               y={chromeAnchor.top}
               position="fixed"
-              gapPx={12}
+              gapPx={8}
               visible={chromeVisible}
             />
             <Popover
