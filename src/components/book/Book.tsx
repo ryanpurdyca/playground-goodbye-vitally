@@ -52,6 +52,8 @@ export function Book() {
   const [winterOffsiteLabelsKey, setWinterOffsiteLabelsKey] = useState(0);
   const [nashvilleOffsiteLabelsPlay, setNashvilleOffsiteLabelsPlay] = useState(false);
   const [nashvilleOffsiteLabelsKey, setNashvilleOffsiteLabelsKey] = useState(0);
+  const [summerOffsiteLabelsPlay, setSummerOffsiteLabelsPlay] = useState(false);
+  const [summerOffsiteLabelsKey, setSummerOffsiteLabelsKey] = useState(0);
   const [polaroidLightboxOpen, setPolaroidLightboxOpen] = useState(false);
 
   // Refs mirror state so event handlers registered once always see current values.
@@ -110,10 +112,18 @@ export function Book() {
       setWinterOffsiteLabelsPlay(false);
       setNashvilleOffsiteLabelsPlay(true);
       setNashvilleOffsiteLabelsKey((k) => k + 1);
+      setSummerOffsiteLabelsPlay(false);
+    } else if (from === 4 && to === 5) {
+      setPolaroidPreviewLabelsPlay(false);
+      setWinterOffsiteLabelsPlay(false);
+      setNashvilleOffsiteLabelsPlay(false);
+      setSummerOffsiteLabelsPlay(true);
+      setSummerOffsiteLabelsKey((k) => k + 1);
     } else {
       setPolaroidPreviewLabelsPlay(false);
       setWinterOffsiteLabelsPlay(false);
       setNashvilleOffsiteLabelsPlay(false);
+      setSummerOffsiteLabelsPlay(false);
     }
     setCurrentPageSync(to);
   }, []);
@@ -122,6 +132,7 @@ export function Book() {
     setPolaroidPreviewLabelsPlay(false);
     setWinterOffsiteLabelsPlay(false);
     setNashvilleOffsiteLabelsPlay(false);
+    setSummerOffsiteLabelsPlay(false);
     setCurrentPageSync(Math.max(currentPageRef.current - 1, 0));
   }, []);
 
@@ -133,6 +144,7 @@ export function Book() {
     setPolaroidPreviewLabelsPlay(false);
     setWinterOffsiteLabelsPlay(false);
     setNashvilleOffsiteLabelsPlay(false);
+    setSummerOffsiteLabelsPlay(false);
     setPolaroidLightboxOpen(false);
     setIsClosing(false);
     setHoveringBook(false);
@@ -163,6 +175,7 @@ export function Book() {
       setPolaroidPreviewLabelsPlay(false);
       setWinterOffsiteLabelsPlay(false);
       setNashvilleOffsiteLabelsPlay(false);
+      setSummerOffsiteLabelsPlay(false);
       setPolaroidLightboxOpen(false);
       setModeSync("idle");
       setIsClosing(false);
@@ -300,6 +313,9 @@ export function Book() {
       nashvilleOffsiteLabelsAnimate:
         mode === "reading" && currentPage === 3 && nashvilleOffsiteLabelsPlay,
       nashvilleOffsiteLabelsKey,
+      summerOffsiteLabelsAnimate:
+        mode === "reading" && currentPage === 5 && summerOffsiteLabelsPlay,
+      summerOffsiteLabelsKey,
       polaroidLightboxOpen,
       setPolaroidLightboxOpen,
     }),
@@ -312,6 +328,8 @@ export function Book() {
       winterOffsiteLabelsKey,
       nashvilleOffsiteLabelsPlay,
       nashvilleOffsiteLabelsKey,
+      summerOffsiteLabelsPlay,
+      summerOffsiteLabelsKey,
       polaroidLightboxOpen,
       goToNextPage,
       goToPrevPage,

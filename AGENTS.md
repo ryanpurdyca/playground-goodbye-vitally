@@ -327,6 +327,9 @@ When you add a primitive or token, update this section and add it to the design-
 - **Page 7 (`bookPages[6]`)** — `NashvilleOffsitePage7`: _Predators hockey game_, _Anomia match_, _Head to head Scrabble_ (`img-2026-03` … `05`).
 - **Page 8 (`bookPages[7]`)** — `NashvilleOffsitePage8`: _Insanely hot chicken_, _Scooter gang_, _Beers and jamming_ (`img-2026-06` … `08`).
 - **Page 9 (`bookPages[8]`)** — `NashvilleOffsitePage9`: _Designers designing_, _Broadway bar crawl_, _First ever honky tonk_, _Morning after bar crawl_ (`img-2026-09` … `12`); staggered layout.
+- **Page 10 (`bookPages[9]`)** — `SummerOffsitePage10`: three `<Polaroid>`s from `2024-summer-offsite` (`img-2024-01` … `03`) at top-left, center, and bottom-left; `SummerOffsitePageLabels` (**Product** / **Team** / **Offsite**, **Summer** / **2024**, centered).
+- **Page 11 (`bookPages[10]`)** — `SummerOffsitePage11`: four staggered prints from `2024-summer-offsite` (`img-2024-04` … `07`).
+- **Page 12 (`bookPages[11]`)** — `SummerOffsitePage12`: four staggered prints from `2024-summer-offsite` (`img-2024-08` … `11`); mirror-ish layout of page 11.
 
 ### 2026-06-03 — Polaroid View cursor: direct tracking + lightbox gate
 
@@ -338,7 +341,7 @@ When you add a primitive or token, update this section and add it to the design-
 - **`ImageLightbox`** (`src/design-system/components/ImageLightbox.tsx`) — portaled scrim + enlarged photo; Escape / backdrop / Close; body scroll lock.
 - **`BookPolaroid`** opens the lightbox on click instead of `onPageFaceClick` so prints are viewable without advancing the book.
 - **Active-face gating.** Each `BookPolaroid` takes `bookPageIndex` (`bookPages` flat index). `isPolaroidFaceActive` enables `pointer-events` only on the current spread (right `2 × currentPage`, left `2 × currentPage − 1`). Buried 3D faces stay inert; lightbox closes when the spread changes.
-- **Polaroid spread labels.** `SpreadPageLabels` (shared layout) powers `PolaroidPageLabels` (`bookPages[1]`), `WinterOffsitePageLabels` (`bookPages[3]`), and `NashvilleOffsitePageLabels` (`bookPages[5]`). Spring spread animates on reading page 0 → 1 (`polaroidPreviewLabelsAnimate`); winter spread on 1 → 2 (`winterOffsiteLabelsAnimate`); Nashville spread on 2 → 3 (`nashvilleOffsiteLabelsAnimate`). Otherwise static Caveat. Top block first, then bottom; 0.35s initial delay (`SpreadPageLabels.tsx`, not `constants.ts`).
+- **Polaroid spread labels.** `SpreadPageLabels` (shared layout) powers `PolaroidPageLabels` (`bookPages[1]`), `WinterOffsitePageLabels` (`bookPages[3]`), `NashvilleOffsitePageLabels` (`bookPages[5]`), and `SummerOffsitePageLabels` (`bookPages[9]`). Spring spread animates on reading page 0 → 1 (`polaroidPreviewLabelsAnimate`); winter spread on 1 → 2 (`winterOffsiteLabelsAnimate`); Nashville spread on 2 → 3 (`nashvilleOffsiteLabelsAnimate`); summer spread on 4 → 5 (`summerOffsiteLabelsAnimate`). Otherwise static Caveat. Top block first, then bottom; 0.35s initial delay (`SpreadPageLabels.tsx`, not `constants.ts`).
 
 ## 8. Quality gates
 

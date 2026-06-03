@@ -4,11 +4,13 @@ import { BookPolaroid } from "./BookPolaroid";
 import { PeopleCloud } from "./PeopleCloud";
 import { NashvilleOffsitePageLabels } from "./NashvilleOffsitePageLabels";
 import { PolaroidPageLabels } from "./PolaroidPageLabels";
+import { SummerOffsitePageLabels } from "./SummerOffsitePageLabels";
 import { WinterOffsitePageLabels } from "./WinterOffsitePageLabels";
 
 const SPRING_OFFSITE_IMG = "/images/images/2026-spring-offsite";
 const WINTER_OFFSITE_IMG = "/images/images/2026-winter-offsite";
 const NASHVILLE_OFFSITE_IMG = "/images/images/2025-winter-offsite";
+const SUMMER_OFFSITE_IMG = "/images/images/2024-summer-offsite";
 
 /**
  * The book's content, authored as a flat list of pages.
@@ -363,6 +365,142 @@ function NashvilleOffsitePage9() {
   );
 }
 
+/** `bookPages` index for this face (sheet 4 verso) — page 10. */
+const SUMMER_OFFSITE_PAGE_10_FACE = 9;
+
+function SummerOffsitePage10() {
+  return (
+    <PageSurface className="overflow-hidden p-6">
+      <div className="relative size-full">
+        <BookPolaroid
+          bookPageIndex={SUMMER_OFFSITE_PAGE_10_FACE}
+          className="absolute top-2 left-2 z-30"
+          image={`${SUMMER_OFFSITE_IMG}/img-2024-01.jpg`}
+          alt="Summer 2024 offsite"
+          rotation={-1}
+          tape={1}
+          tapeRotation={0}
+        />
+        <SummerOffsitePageLabels />
+        <BookPolaroid
+          bookPageIndex={SUMMER_OFFSITE_PAGE_10_FACE}
+          className="absolute top-1/2 left-1/2 z-20 -translate-x-1/2 -translate-y-1/2"
+          image={`${SUMMER_OFFSITE_IMG}/img-2024-02.jpg`}
+          alt="Summer 2024 offsite"
+          rotation={1}
+          tape={3}
+          tapeRotation={-1}
+        />
+        <BookPolaroid
+          bookPageIndex={SUMMER_OFFSITE_PAGE_10_FACE}
+          className="absolute bottom-2 left-2 z-10"
+          image={`${SUMMER_OFFSITE_IMG}/img-2024-03.jpg`}
+          alt="Summer 2024 offsite"
+          rotation={2}
+          tape={5}
+          tapeRotation={1}
+        />
+      </div>
+    </PageSurface>
+  );
+}
+
+/** `bookPages` index for this face (sheet 5 recto) — page 11. */
+const SUMMER_OFFSITE_PAGE_11_FACE = 10;
+
+function SummerOffsitePage11() {
+  return (
+    <PageSurface className="overflow-hidden p-6">
+      <div className="relative size-full">
+        <BookPolaroid
+          bookPageIndex={SUMMER_OFFSITE_PAGE_11_FACE}
+          className="absolute top-1 left-1 z-40"
+          image={`${SUMMER_OFFSITE_IMG}/img-2024-04.jpg`}
+          alt="Summer 2024 offsite"
+          rotation={3}
+          tape={2}
+          tapeRotation={2}
+        />
+        <BookPolaroid
+          bookPageIndex={SUMMER_OFFSITE_PAGE_11_FACE}
+          className="absolute top-[22%] right-1 z-35"
+          image={`${SUMMER_OFFSITE_IMG}/img-2024-05.jpg`}
+          alt="Summer 2024 offsite"
+          rotation={-2}
+          tape={1}
+          tapeRotation={-2}
+        />
+        <BookPolaroid
+          bookPageIndex={SUMMER_OFFSITE_PAGE_11_FACE}
+          className="absolute top-[61%] left-8 z-30 -translate-y-[42%]"
+          image={`${SUMMER_OFFSITE_IMG}/img-2024-06.jpg`}
+          alt="Summer 2024 offsite"
+          rotation={2}
+          tape={4}
+          tapeRotation={1}
+        />
+        <BookPolaroid
+          bookPageIndex={SUMMER_OFFSITE_PAGE_11_FACE}
+          className="absolute right-2 bottom-2 z-25"
+          image={`${SUMMER_OFFSITE_IMG}/img-2024-07.PNG`}
+          alt="Summer 2024 offsite"
+          rotation={-3}
+          tape={6}
+          tapeRotation={-1}
+        />
+      </div>
+    </PageSurface>
+  );
+}
+
+/** `bookPages` index for this face (sheet 5 verso) — page 12. */
+const SUMMER_OFFSITE_PAGE_12_FACE = 11;
+
+function SummerOffsitePage12() {
+  return (
+    <PageSurface className="overflow-hidden p-6">
+      <div className="relative size-full">
+        <BookPolaroid
+          bookPageIndex={SUMMER_OFFSITE_PAGE_12_FACE}
+          className="absolute top-1 left-1 z-40"
+          image={`${SUMMER_OFFSITE_IMG}/img-2024-08.jpg`}
+          alt="Summer 2024 offsite"
+          rotation={-3}
+          tape={2}
+          tapeRotation={2}
+        />
+        <BookPolaroid
+          bookPageIndex={SUMMER_OFFSITE_PAGE_12_FACE}
+          className="absolute top-[22%] right-1 z-35"
+          image={`${SUMMER_OFFSITE_IMG}/img-2024-09.jpg`}
+          alt="Summer 2024 offsite"
+          rotation={2}
+          tape={1}
+          tapeRotation={-2}
+        />
+        <BookPolaroid
+          bookPageIndex={SUMMER_OFFSITE_PAGE_12_FACE}
+          className="absolute top-[61%] left-8 z-30 -translate-y-[42%]"
+          image={`${SUMMER_OFFSITE_IMG}/img-2024-10.jpg`}
+          alt="Summer 2024 offsite"
+          rotation={-2}
+          tape={4}
+          tapeRotation={1}
+        />
+        <BookPolaroid
+          bookPageIndex={SUMMER_OFFSITE_PAGE_12_FACE}
+          className="absolute right-2 bottom-2 z-25"
+          image={`${SUMMER_OFFSITE_IMG}/img-2024-11.jpg`}
+          alt="Summer 2024 offsite"
+          rotation={3}
+          tape={6}
+          tapeRotation={-1}
+        />
+      </div>
+    </PageSurface>
+  );
+}
+
 function PlaceholderPage({ n }: { n: number }) {
   return (
     <PageSurface className="items-center justify-center">
@@ -381,5 +519,8 @@ export const bookPages: ReactNode[] = [
   <NashvilleOffsitePage7 key="nashville-offsite-page-7" />,
   <NashvilleOffsitePage8 key="nashville-offsite-page-8" />,
   <NashvilleOffsitePage9 key="nashville-offsite-page-9" />,
-  ...Array.from({ length: 4 }, (_, i) => <PlaceholderPage key={`placeholder-${i}`} n={i + 10} />),
+  <SummerOffsitePage10 key="summer-offsite-page-10" />,
+  <SummerOffsitePage11 key="summer-offsite-page-11" />,
+  <SummerOffsitePage12 key="summer-offsite-page-12" />,
+  ...Array.from({ length: 1 }, (_, i) => <PlaceholderPage key={`placeholder-${i}`} n={i + 13} />),
 ];
