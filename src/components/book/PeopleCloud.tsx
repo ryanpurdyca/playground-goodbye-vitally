@@ -1,20 +1,15 @@
 "use client";
 
-import { motion } from "framer-motion";
 import Image from "next/image";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { Tooltip } from "@/design-system";
 import {
   PEOPLE_CLOUD_AREA_FILL,
   PEOPLE_CLOUD_EDGE_PAD_PX,
   PEOPLE_CLOUD_GAP_PX,
-  PEOPLE_CLOUD_GROW_SCALE,
-  PEOPLE_CLOUD_NEIGHBOR_RANGE_PX,
   PEOPLE_CLOUD_RELAX_ITERATIONS,
-  PEOPLE_CLOUD_SHRINK_SCALE,
   PEOPLE_CLOUD_SOLVE_ITERATIONS,
-  PEOPLE_CLOUD_SPRING,
   PEOPLE_CLOUD_STABLE_THRESHOLD,
 } from "./constants";
 import { useBookReadingNav } from "./BookReadingContext";
@@ -28,20 +23,17 @@ type SimBubble = Person & {
   r: number;
 };
 
-type BubbleTarget = { x: number; y: number; r: number };
-
 function computeBaseRadius(width: number, height: number, count: number): number {
   return Math.sqrt((PEOPLE_CLOUD_AREA_FILL * width * height) / (count * Math.PI));
 }
 
-function clampBubble(b: SimBubble, width: number, height: number, immovableId: string | null) {
-  if (b.id === immovableId) return;
+function clampBubble(b: SimBubble, width: number, height: number) {
   const pad = PEOPLE_CLOUD_EDGE_PAD_PX;
   b.x = Math.max(b.r + pad, Math.min(width - b.r - pad, b.x));
   b.y = Math.max(b.r + pad, Math.min(height - b.r - pad, b.y));
 }
 
-function resolvePair(a: SimBubble, b: SimBubble, gap: number, immovableId: string | null): number {
+function resolvePair(a: SimBubble, b: SimBubble, gap: number): number {
   const dx = b.x - a.x;
   const dy = b.y - a.y;
   let dist = Math.hypot(dx, dy);
@@ -55,27 +47,6 @@ function resolvePair(a: SimBubble, b: SimBubble, gap: number, immovableId: strin
   const nx = dx / dist;
   const ny = dy / dist;
 
-  const aFixed = a.id === immovableId;
-  const bFixed = b.id === immovableId;
-
-  if (aFixed && bFixed) {
-    return 0;
-  }
-  if (aFixed) {
-    const bx = b.x;
-    const by = b.y;
-    b.x += nx * overlap;
-    b.y += ny * overlap;
-    return Math.max(Math.abs(b.x - bx), Math.abs(b.y - by));
-  }
-  if (bFixed) {
-    const ax = a.x;
-    const ay = a.y;
-    a.x -= nx * overlap;
-    a.y -= ny * overlap;
-    return Math.max(Math.abs(a.x - ax), Math.abs(a.y - ay));
-  }
-
   const half = overlap / 2;
   const ax = a.x;
   const ay = a.y;
@@ -88,40 +59,27 @@ function resolvePair(a: SimBubble, b: SimBubble, gap: number, immovableId: strin
   return Math.max(Math.abs(a.x - ax), Math.abs(a.y - ay), Math.abs(b.x - bx), Math.abs(b.y - by));
 }
 
-function relaxPass(
-  bubbles: SimBubble[],
-  width: number,
-  height: number,
-  immovableId: string | null,
-): number {
+function relaxPass(bubbles: SimBubble[], width: number, height: number): number {
   let maxMove = 0;
   for (let iter = 0; iter < PEOPLE_CLOUD_RELAX_ITERATIONS; iter++) {
     for (let i = 0; i < bubbles.length; i++) {
       for (let j = i + 1; j < bubbles.length; j++) {
-        maxMove = Math.max(
-          maxMove,
-          resolvePair(bubbles[i], bubbles[j], PEOPLE_CLOUD_GAP_PX, immovableId),
-        );
+        maxMove = Math.max(maxMove, resolvePair(bubbles[i], bubbles[j], PEOPLE_CLOUD_GAP_PX));
       }
     }
     for (const b of bubbles) {
       const prevX = b.x;
       const prevY = b.y;
-      clampBubble(b, width, height, immovableId);
+      clampBubble(b, width, height);
       maxMove = Math.max(maxMove, Math.abs(b.x - prevX), Math.abs(b.y - prevY));
     }
   }
   return maxMove;
 }
 
-function solveLayout(
-  bubbles: SimBubble[],
-  width: number,
-  height: number,
-  immovableId: string | null,
-): void {
+function solveLayout(bubbles: SimBubble[], width: number, height: number): void {
   for (let pass = 0; pass < PEOPLE_CLOUD_SOLVE_ITERATIONS; pass++) {
-    const moved = relaxPass(bubbles, width, height, immovableId);
+    const moved = relaxPass(bubbles, width, height);
     if (moved < PEOPLE_CLOUD_STABLE_THRESHOLD) break;
   }
 }
@@ -147,7 +105,7 @@ function seedHomeLayout(width: number, height: number, baseR: number): SimBubble
     };
   });
 
-  solveLayout(bubbles, width, height, null);
+  solveLayout(bubbles, width, height);
 
   for (const b of bubbles) {
     b.homeX = b.x;
@@ -155,56 +113,6 @@ function seedHomeLayout(width: number, height: number, baseR: number): SimBubble
   }
 
   return bubbles;
-}
-
-function radiusForBubble(
-  bubbleId: string,
-  hoveredId: string | null,
-  home: SimBubble[],
-  baseR: number,
-): number {
-  if (!hoveredId) return baseR;
-  if (bubbleId === hoveredId) return baseR * PEOPLE_CLOUD_GROW_SCALE;
-  const h = home.find((b) => b.id === hoveredId);
-  const self = home.find((b) => b.id === bubbleId);
-  if (h && self) {
-    const dist = Math.hypot(self.homeX - h.homeX, self.homeY - h.homeY);
-    if (dist < PEOPLE_CLOUD_NEIGHBOR_RANGE_PX) {
-      return baseR * PEOPLE_CLOUD_SHRINK_SCALE;
-    }
-  }
-  return baseR;
-}
-
-function computeTargets(
-  home: SimBubble[],
-  baseR: number,
-  hoveredId: string | null,
-  width: number,
-  height: number,
-): Map<string, BubbleTarget> {
-  const working: SimBubble[] = home.map((b) => ({
-    ...b,
-    x: b.homeX,
-    y: b.homeY,
-    r: radiusForBubble(b.id, hoveredId, home, baseR),
-  }));
-
-  solveLayout(working, width, height, hoveredId);
-
-  const targets = new Map<string, BubbleTarget>();
-  for (const b of working) {
-    targets.set(b.id, { x: b.x, y: b.y, r: b.r });
-  }
-  return targets;
-}
-
-function restTargets(home: SimBubble[], baseR: number): Map<string, BubbleTarget> {
-  const targets = new Map<string, BubbleTarget>();
-  for (const b of home) {
-    targets.set(b.id, { x: b.homeX, y: b.homeY, r: baseR });
-  }
-  return targets;
 }
 
 export function PeopleCloud() {
@@ -228,16 +136,6 @@ export function PeopleCloud() {
     setBaseR(r);
     setSize({ width, height });
   }, []);
-
-  const currentTargets = useMemo(() => {
-    if (homeBubbles.length === 0 || baseR <= 0 || size.width <= 0) {
-      return new Map<string, BubbleTarget>();
-    }
-    if (!activeHoveredId) {
-      return restTargets(homeBubbles, baseR);
-    }
-    return computeTargets(homeBubbles, baseR, activeHoveredId, size.width, size.height);
-  }, [homeBubbles, baseR, activeHoveredId, size.width, size.height]);
 
   useEffect(() => {
     const el = containerRef.current;
@@ -263,7 +161,6 @@ export function PeopleCloud() {
     else bubbleRefs.current.delete(id);
   }, []);
 
-  // Anchor from the bubble's painted box (3D + scale transforms included), not sim coords.
   useEffect(() => {
     if (!activeHoveredId) return;
 
@@ -299,10 +196,9 @@ export function PeopleCloud() {
       {size.width > 0 &&
         baseR > 0 &&
         homeBubbles.map((b) => {
-          const t = currentTargets.get(b.id) ?? { x: b.homeX, y: b.homeY, r: baseR };
           const d = baseR * 2;
           return (
-            <motion.div
+            <div
               key={b.id}
               ref={(el) => setBubbleRef(b.id, el)}
               data-people-bubble
@@ -318,12 +214,6 @@ export function PeopleCloud() {
                 height: d,
                 zIndex: b.id === activeHoveredId ? 20 : 1,
               }}
-              animate={{
-                x: t.x - b.homeX,
-                y: t.y - b.homeY,
-                scale: t.r / baseR,
-              }}
-              transition={{ type: "spring", ...PEOPLE_CLOUD_SPRING }}
               onMouseEnter={
                 interactive
                   ? () => {
@@ -350,7 +240,7 @@ export function PeopleCloud() {
                 className="object-cover"
                 draggable={false}
               />
-            </motion.div>
+            </div>
           );
         })}
 
