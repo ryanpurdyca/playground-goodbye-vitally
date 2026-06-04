@@ -103,7 +103,7 @@ export const people: Person[] = [
   ),
   person(
     "img-patrick.jpeg",
-    "A lot comes to mind, but I always loved our occasional Wolfnights lunches together learning more about yours and Anna's adventures.",
+    "A lot comes to mind, but I always loved our occasional Wolfnights lunches together learning more about your and Anna's adventures.",
   ),
   person(
     "img-ray.jpeg",
@@ -119,7 +119,7 @@ export const people: Person[] = [
   ),
   person(
     "img-tim.jpeg",
-    "Exchanging countless pepe memes talking about your fossil interests and adventures.",
+    "Exchanging countless Pepe memes talking about your fossil interests and adventures.",
   ),
   person(
     "img-tomas.png",
