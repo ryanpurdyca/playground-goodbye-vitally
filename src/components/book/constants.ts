@@ -56,7 +56,9 @@ export function isDisplayPageInSpread(displayPage: number, readingIndex: number)
 /** Page stepper tick dimensions (px). */
 export const PAGE_STEPPER_HEIGHT_PX = 12;
 export const PAGE_STEPPER_WIDTH_PX = 4;
+/** Visual space between ticks; each affordance pads by half so the gap is hoverable. */
 export const PAGE_STEPPER_GAP_PX = 8;
+export const PAGE_STEPPER_PAD_X_PX = PAGE_STEPPER_GAP_PX / 2;
 
 /** Maximum opening angle for the front cover (degrees, negative = swings left). */
 export const COVER_OPEN_ANGLE = -174;

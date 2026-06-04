@@ -208,19 +208,19 @@ Append new entries at the bottom. Use the format: `### YYYY-MM-DD — Title`.
 
 Historical entries below remain for context; **this list is the source of truth** for the design-system branch:
 
-| Topic                  | Current behavior                                                                                                                                                                    |
-| ---------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Book piece borders     | `border-ink` on Cover, Page, BackCover (not `border-accent`)                                                                                                                        |
-| Cover face             | Black `bg-cover`, outer `border-ink`, white inset `border-cover-border-inner`, corner Vitally SVGs, centred Caveat title “Memories from / my time at Vitally” (`text-3xl`)          |
-| Cover inside           | `CoverInside`: `bg-surface-raised`, centred Caveat `text-ink` — “Some of the folks who made my time special.” (visible on the left when open to page 1)                             |
-| Cover fonts            | Caveat via `--font-caveat` inline style — **not** Instrument Serif                                                                                                                  |
-| Page chrome            | `page.tsx`: 28px gutter, dotted rules at `top/bottom/left/right-7`, “Stay in touch” + social links at `bottom: 44px`, `right: 52px`                                                 |
-| Button row             | `top: calc(50vh + var(--book-height) / 2 + 52px)`                                                                                                                                   |
-| Page label (reading)   | `text-ink-subtle` mono above book left edge (`left: calc(50vw - var(--book-width))`, `top: calc(50vh - var(--book-height) / 2 - 56px)`)                                             |
-| Author label (reading) | `Ryan P.` bottom-left of frame (`left: 52px`, `bottom: 44px`, mirrors “Stay in touch”)                                                                                              |
-| Page stepper (reading) | `PageStepper` centered between bottom buttons — 22 ticks (`READING_PAGE_COUNT`), 4×12px, 8px gap, `bg-stepper` / `bg-stepper-active`; hover/focus navigates via `onGoToDisplayPage` |
-| LeftPageText font      | `--font-caveat` inline style                                                                                                                                                        |
-| Static assets          | `public/images/stickers/vitally-01.svg`, `vitally-02.svg` on cover only                                                                                                             |
+| Topic                  | Current behavior                                                                                                                                                                                                                           |
+| ---------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Book piece borders     | `border-ink` on Cover, Page, BackCover (not `border-accent`)                                                                                                                                                                               |
+| Cover face             | Black `bg-cover`, outer `border-ink`, white inset `border-cover-border-inner`, corner Vitally SVGs, centred Caveat title “Memories from / my time at Vitally” (`text-3xl`)                                                                 |
+| Cover inside           | `CoverInside`: `bg-surface-raised`, centred Caveat `text-ink` — “Some of the folks who made my time special.” (visible on the left when open to page 1)                                                                                    |
+| Cover fonts            | Caveat via `--font-caveat` inline style — **not** Instrument Serif                                                                                                                                                                         |
+| Page chrome            | `page.tsx`: 28px gutter, dotted rules at `top/bottom/left/right-7`, “Stay in touch” + social links at `bottom: 44px`, `right: 52px`                                                                                                        |
+| Button row             | `top: calc(50vh + var(--book-height) / 2 + 52px)`                                                                                                                                                                                          |
+| Page label (reading)   | `text-ink-subtle` mono above book left edge (`left: calc(50vw - var(--book-width))`, `top: calc(50vh - var(--book-height) / 2 - 56px)`)                                                                                                    |
+| Author label (reading) | `Ryan P.` bottom-left of frame (`left: 52px`, `bottom: 44px`, mirrors “Stay in touch”)                                                                                                                                                     |
+| Page stepper (reading) | `PageStepper` centered between bottom buttons — 22 ticks (`READING_PAGE_COUNT`), 4×12px visual, 8px spacing via horizontal pad (hoverable, no flex gap), `bg-stepper` / `bg-stepper-active`; hover/focus navigates via `onGoToDisplayPage` |
+| LeftPageText font      | `--font-caveat` inline style                                                                                                                                                                                                               |
+| Static assets          | `public/images/stickers/vitally-01.svg`, `vitally-02.svg` on cover only                                                                                                                                                                    |
 
 ### 2026-05-28 — Customizable pages (two-faced leaves + content list)
 
@@ -336,7 +336,7 @@ When you add a primitive or token, update this section and add it to the design-
 
 ### 2026-06-03 — Reading-mode page stepper between bottom buttons
 
-- **`PageStepper`** (`src/components/book/PageStepper.tsx`) — one 4×12px rounded tick per display page (`READING_PAGE_COUNT`, currently 22), 8px gap, tokens `stepper` / `stepper-active`. Centered in the button row while reading; `mouseenter` (and focus/click for keyboard) calls `goToDisplayPage` → `displayPageToReadingIndex`. Both ticks on the current spread highlight. Stepper jumps do not re-bump spread label animation keys (Next/Back still do).
+- **`PageStepper`** (`src/components/book/PageStepper.tsx`) — one 4×12px rounded tick per display page (`READING_PAGE_COUNT`, currently 22), 8px visual spacing from 4px horizontal pad per side (no flex gap — pad is hoverable). Tokens `stepper` / `stepper-active`. Centered in the button row while reading; `mouseenter` (and focus/click for keyboard) calls `goToDisplayPage` → `displayPageToReadingIndex`. Both ticks on the current spread highlight. Stepper jumps do not re-bump spread label animation keys (Next/Back still do).
 
 ### 2026-06-03 — Polaroid View cursor: direct tracking + lightbox gate
 
