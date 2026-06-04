@@ -383,6 +383,12 @@ When you add a primitive or token, update this section and add it to the design-
 
 - **`SpreadPageLabels` / `HandwrittenText` reveal** runs only when `applySpreadLabelState` is called with `enableReveal: true` and `bumpKeys: true` — i.e. **Next** or right-page click (`goToNextPage`). `PageStepper` hover/focus/click uses `goToDisplayPage` → `enableLabelReveal: false`, so labels stay static while scrubbing. Back/left-page navigation also skips reveal.
 
+### 2026-06-04 — Close-sequence page z-order
+
+- **Bug.** While closing, sheets briefly stacked on top of one another — deep pages flashed over the active spread as every sheet sprang to `rotateY: 0`.
+- **Cause.** Reading-mode right-stack z-order gives low `translateZ` to high-index sheets; when those sheets reach 0° before the active sheet finishes rotating, rotation dominates the ~1.5px depth gaps and the wrong face paints on top (runtime `elementsFromPoint` during close confirmed e.g. `p9` over `p0`).
+- **Fix.** `Page.tsx` accepts `isClosing`: use idle descending `translateZ` plus lift `index === readingPage` (the sheet flipping back onto the right stack) to `(numPages + 1) * PAGE_Z_STEP`.
+
 ## 8. Quality gates
 
 | Command                | What it checks                                            |

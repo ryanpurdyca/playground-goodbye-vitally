@@ -31,6 +31,8 @@ type Props = {
   subPeeled: boolean;
   /** True when additionally hovered — adds extra peel on top of the base. */
   hovered: boolean;
+  /** True during the sequential close animation — stabilizes z-order while sheets settle. */
+  isClosing?: boolean;
   /** Content shown on the front (recto) face — visible on the right stack. */
   front: ReactNode;
   /** Content shown on the back (verso) face — visible on the left stack after a flip. */
@@ -45,6 +47,7 @@ export function Page({
   peeled,
   subPeeled,
   hovered,
+  isClosing = false,
   front,
   back,
 }: Props) {
@@ -109,7 +112,15 @@ export function Page({
   //    to ascending order and a lower sheet (e.g. page 3) flashes through page 1
   //    in the instant before the closing cover seats flat.
   let translateZ: number;
-  if (readingPage !== null) {
+  if (readingPage !== null && isClosing) {
+    // During close every sheet springs toward rotateY 0. Reading-mode z-order
+    // leaves deeper right-stack sheets (high index) with low translateZ, so a
+    // sheet that reaches 0° first wins the depth sort and flashes its content
+    // over the spread. Idle descending order keeps sheet 0 on top; lift the
+    // sheet currently flipping back onto the right stack above the rest.
+    translateZ =
+      index === readingPage ? (numPages + 1) * PAGE_Z_STEP : (numPages - index) * PAGE_Z_STEP;
+  } else if (readingPage !== null) {
     translateZ =
       index >= readingPage
         ? (numPages - (index - readingPage)) * PAGE_Z_STEP

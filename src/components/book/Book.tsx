@@ -452,6 +452,7 @@ export function Book() {
                   numPages={numPages}
                   openness={smoothOpenness}
                   readingPage={readingPage}
+                  isClosing={isClosing}
                   front={pages[i * 2] ?? <PageSurface />}
                   back={
                     pages[i * 2 + 1] ??
