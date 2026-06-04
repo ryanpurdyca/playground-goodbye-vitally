@@ -538,9 +538,9 @@ function LeadershipOffsitePage13() {
         <BookPolaroid
           bookPageIndex={LEADERSHIP_OFFSITE_PAGE_13_FACE}
           className="absolute top-10 right-6 z-20"
-          image={`${FALL_2023_OFFSITE_IMG}/img-2023-10.jpg`}
-          alt="First time in Dumbo"
-          caption="First time in Dumbo"
+          image={`${FALL_2023_OFFSITE_IMG}/img-2023-10.jpeg`}
+          alt="Team Photo"
+          caption="Team Photo"
           rotation={-1}
           tape={2}
           tapeRotation={0}
@@ -550,8 +550,8 @@ function LeadershipOffsitePage13() {
           bookPageIndex={LEADERSHIP_OFFSITE_PAGE_13_FACE}
           className="absolute bottom-10 left-6 z-10"
           image={`${FALL_2023_OFFSITE_IMG}/img-2023-11.jpg`}
-          alt="Brooklyn Bridge"
-          caption="Brooklyn Bridge"
+          alt="Featherball bar"
+          caption="Featherball bar"
           rotation={2}
           tape={4}
           tapeRotation={-2}
@@ -572,8 +572,8 @@ function LeadershipOffsitePage14() {
           bookPageIndex={LEADERSHIP_OFFSITE_PAGE_14_FACE}
           className="absolute top-2 right-2 z-30"
           image={`${FALL_2023_OFFSITE_IMG}/img-2023-12.jpg`}
-          alt="Featherball bar"
-          caption="Featherball bar"
+          alt="Brooklyn Bridge"
+          caption="Brooklyn Bridge"
           rotation={-2}
           tape={1}
           tapeRotation={1}
@@ -582,8 +582,8 @@ function LeadershipOffsitePage14() {
           bookPageIndex={LEADERSHIP_OFFSITE_PAGE_14_FACE}
           className="absolute top-[42%] left-2 z-20 -translate-y-1/2"
           image={`${FALL_2023_OFFSITE_IMG}/img-2023-13.jpg`}
-          alt="Sort of team photo"
-          caption="Sort of team photo"
+          alt="First time in Dumbo"
+          caption="First time in Dumbo"
           rotation={1}
           tape={5}
           tapeRotation={-1}
