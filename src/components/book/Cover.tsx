@@ -63,8 +63,17 @@ export function Cover({ openness, numPages, isMobile = false, closePeelActive = 
     return () => controls.stop();
   }, [closePeelActive, hoverPeel]);
 
-  // Translate forward so the cover sits above the page stack when closed.
-  const translateZ = (numPages + 1) * PAGE_Z_STEP;
+  // The cover must sit ABOVE the whole stack when closed (highest translateZ)
+  // but BEHIND the flipped left pages when open. Once open, the cover lies at
+  // COVER_OPEN_ANGLE — the same angle as the left pages, all hinged at the spine
+  // — so near the spine the planes are nearly coincident; a high translateZ would
+  // let the cover's light inside face win the depth sort and clip the left page's
+  // spine-side content. Interpolating translateZ down to below the left stack as
+  // it opens keeps the cover behind the pages near the spine. The mid-range is
+  // edge-on (rotateY ~ -90°), where translateZ is visually irrelevant.
+  const translateZ = useTransform(openness, [0, 1], [(numPages + 1) * PAGE_Z_STEP, -PAGE_Z_STEP], {
+    clamp: true,
+  });
 
   // Iridescent sheen that tracks the pointer across the cover face. The cover
   // can't receive its own pointer events (the perspective container sets

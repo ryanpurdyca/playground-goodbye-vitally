@@ -373,6 +373,12 @@ When you add a primitive or token, update this section and add it to the design-
 - **`numPages` prop on `Page` / `Cover`.** Fan depth, stack `translateZ`, and cover elevation must use `Book`'s runtime sheet count — not build-time `NUM_PAGES` from `constants.ts` — or mobile's extra leaves get negative z and peek beside the closed cover.
 - **Desktop unchanged.** `bookPages` + build-time `NUM_PAGES` in `constants.ts` still drive tests and `Cover.tsx`-unrelated geometry; `Book` passes `numPages` into `Page` / `Cover`.
 
+### 2026-06-04 — Cover translateZ when open (left-page spine clipping)
+
+- **Bug.** From display page 3 onward, content on the **left** (verso) face looked clipped on its spine-side edge — especially polaroids near the gutter. Affects desktop and mobile.
+- **Cause.** At full open the cover shares `COVER_OPEN_ANGLE` with the left stack; planes meet near the spine. A fixed high `translateZ` on the cover (needed when closed) let `CoverInside` win the depth sort over left-page content in that region.
+- **Fix.** `Cover.tsx`: `translateZ = useTransform(openness, [0, 1], [(numPages + 1) * PAGE_Z_STEP, -PAGE_Z_STEP])` — on top when closed, behind the left stack when open. Mid-open the cover is edge-on (~−90°), where `translateZ` barely affects paint order.
+
 ## 8. Quality gates
 
 | Command                | What it checks                                            |
