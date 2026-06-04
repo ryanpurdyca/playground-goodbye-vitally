@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import { PageSurface } from "@/design-system";
+import { ThankYouPage } from "./ThankYouPage";
 import { BookPolaroid } from "./BookPolaroid";
 import { PeopleCloud } from "./PeopleCloud";
 import { AutocampOffsitePageLabels } from "./AutocampOffsitePageLabels";
@@ -829,4 +830,14 @@ export const bookPages: ReactNode[] = [
   <AutocampOffsitePage18 key="autocamp-offsite-page-18" />,
   <NycHolidayOffsitePage19 key="nyc-holiday-offsite-page-19" />,
   <NycHolidayOffsitePage20 key="nyc-holiday-offsite-page-20" />,
+];
+
+/**
+ * Mobile reading list: each desktop face on a recto with a blank verso so every
+ * page stays centered in the closed-book footprint (see §5 mobile right-page).
+ */
+export const bookPagesMobile: ReactNode[] = [
+  ...bookPages.flatMap((face, i) => [face, <PageSurface key={`m-blank-${i}`} />]),
+  <ThankYouPage key="m-thankyou" />,
+  <PageSurface key="m-blank-thankyou" />,
 ];

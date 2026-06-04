@@ -10,14 +10,11 @@ import { BookButtons, type BookMode } from "./BookButtons";
 import { CursorFollower } from "./CursorFollower";
 import { BookReadingProvider } from "./BookReadingContext";
 import { PageSurface } from "@/design-system";
-import { bookPages } from "./pages";
+import { bookPages, bookPagesMobile } from "./pages";
 import {
   BOOK_HEIGHT_PX,
   BOOK_WIDTH_PX,
   displayPageToReadingIndex,
-  INSIDE_BACK_COVER_BOOK_PAGE_INDEX,
-  MAX_READING_PAGE_INDEX,
-  NUM_PAGES,
   OPEN_CENTRE_OFFSET,
   OPENNESS_SPRING,
   SCENE_PERSPECTIVE_PX,
@@ -50,6 +47,11 @@ function useIsMobile() {
  */
 export function Book() {
   const isMobile = useIsMobile();
+  const pages = isMobile ? bookPagesMobile : bookPages;
+  const numPages = Math.ceil(pages.length / 2);
+  const maxReadingPageIndex = numPages;
+  const insideBackCoverIndex = pages.length;
+
   const openness = useMotionValue(0);
   const smoothOpenness = useSpring(openness, OPENNESS_SPRING);
 
@@ -132,12 +134,12 @@ export function Book() {
 
   const goToReadingPageIndex = useCallback(
     (target: number, options?: { bumpLabelKeys?: boolean }) => {
-      const to = Math.max(0, Math.min(target, MAX_READING_PAGE_INDEX));
+      const to = Math.max(0, Math.min(target, maxReadingPageIndex));
       if (to === currentPageRef.current) return;
       applySpreadLabelState(to, options?.bumpLabelKeys ?? false);
       setCurrentPageSync(to);
     },
-    [applySpreadLabelState],
+    [applySpreadLabelState, maxReadingPageIndex],
   );
 
   const goToDisplayPage = useCallback(
@@ -149,11 +151,11 @@ export function Book() {
 
   const goToNextPage = useCallback(() => {
     const from = currentPageRef.current;
-    const to = Math.min(from + 1, MAX_READING_PAGE_INDEX);
+    const to = Math.min(from + 1, maxReadingPageIndex);
     if (to === from) return;
     applySpreadLabelState(to, true);
     setCurrentPageSync(to);
-  }, [applySpreadLabelState]);
+  }, [applySpreadLabelState, maxReadingPageIndex]);
 
   const goToPrevPage = useCallback(() => {
     const to = Math.max(currentPageRef.current - 1, 0);
@@ -308,13 +310,13 @@ export function Book() {
           } else {
             handleCloseRef.current();
           }
-        } else if (currentPageRef.current < MAX_READING_PAGE_INDEX) {
+        } else if (currentPageRef.current < maxReadingPageIndex) {
           goToNextPage();
         }
       },
       onRightPagePointer: () => setHoveredSide("right"),
       onRightPageClick: () => {
-        if (currentPageRef.current < MAX_READING_PAGE_INDEX) {
+        if (currentPageRef.current < maxReadingPageIndex) {
           goToNextPage();
         }
       },
@@ -325,11 +327,16 @@ export function Book() {
       onCoverPageClick: () => handleCloseRef.current(),
       isPolaroidFaceActive: (bookPageIndex: number) => {
         if (mode !== "reading") return false;
+        if (isMobile) {
+          return (
+            bookPageIndex === currentPage ||
+            (currentPage === maxReadingPageIndex && bookPageIndex === insideBackCoverIndex)
+          );
+        }
         const rightFace = currentPage * 2;
         const leftFace = currentPage > 0 ? currentPage * 2 - 1 : -1;
         const insideBackActive =
-          currentPage === MAX_READING_PAGE_INDEX &&
-          bookPageIndex === INSIDE_BACK_COVER_BOOK_PAGE_INDEX;
+          currentPage === maxReadingPageIndex && bookPageIndex === insideBackCoverIndex;
         return bookPageIndex === rightFace || bookPageIndex === leftFace || insideBackActive;
       },
       polaroidPreviewLabelsAnimate:
@@ -350,6 +357,9 @@ export function Book() {
     [
       mode,
       currentPage,
+      isMobile,
+      maxReadingPageIndex,
+      insideBackCoverIndex,
       polaroidPreviewLabelsPlay,
       polaroidPreviewLabelsKey,
       winterOffsiteLabelsPlay,
@@ -375,9 +385,11 @@ export function Book() {
             <div
               className="absolute cursor-pointer"
               style={{
-                left: "calc(50vw - var(--book-width))",
+                left: isMobile
+                  ? "calc(50vw - var(--book-width) / 2)"
+                  : "calc(50vw - var(--book-width))",
                 top: "calc(50vh - var(--book-height) / 2)",
-                width: "var(--book-width)",
+                width: isMobile ? "calc(var(--book-width) / 2)" : "var(--book-width)",
                 height: "var(--book-height)",
               }}
               onClick={currentPage > 0 ? handleBack : handleClose}
@@ -389,10 +401,10 @@ export function Book() {
               style={{
                 left: "50vw",
                 top: "calc(50vh - var(--book-height) / 2)",
-                width: "var(--book-width)",
+                width: isMobile ? "calc(var(--book-width) / 2)" : "var(--book-width)",
                 height: "var(--book-height)",
               }}
-              onClick={currentPage < MAX_READING_PAGE_INDEX ? handleNext : undefined}
+              onClick={currentPage < maxReadingPageIndex ? handleNext : undefined}
               onMouseEnter={() => setHoveredSide("right")}
               onMouseLeave={() => setHoveredSide(null)}
             />
@@ -419,19 +431,19 @@ export function Book() {
               rotateZ: tiltZ,
             }}
           >
-            <BackCover openness={smoothOpenness} />
-            {Array.from({ length: NUM_PAGES }, (_, i) => {
-              const isOddTailSheet = i === NUM_PAGES - 1 && bookPages.length % 2 === 1;
+            <BackCover openness={smoothOpenness} insideBackCoverIndex={insideBackCoverIndex} />
+            {Array.from({ length: numPages }, (_, i) => {
+              const isOddTailSheet = i === numPages - 1 && pages.length % 2 === 1;
               return (
                 <Page
                   key={i}
                   index={i}
                   openness={smoothOpenness}
                   readingPage={readingPage}
-                  front={bookPages[i * 2] ?? <PageSurface />}
+                  front={pages[i * 2] ?? <PageSurface />}
                   back={
-                    bookPages[i * 2 + 1] ??
-                    (isOddTailSheet ? <BackCoverInsidePage /> : <PageSurface />)
+                    pages[i * 2 + 1] ??
+                    (isOddTailSheet && !isMobile ? <BackCoverInsidePage /> : <PageSurface />)
                   }
                   peeled={
                     !isClosing &&
@@ -439,7 +451,7 @@ export function Book() {
                     ((i === readingPage - 1 && readingPage > 0) || i === readingPage)
                   }
                   subPeeled={
-                    !isClosing && readingPage !== null && i === readingPage + 1 && i < NUM_PAGES
+                    !isClosing && readingPage !== null && i === readingPage + 1 && i < numPages
                   }
                   hovered={
                     readingPage !== null &&
@@ -484,6 +496,7 @@ export function Book() {
           mode={mode}
           currentPage={currentPage}
           isMobile={isMobile}
+          maxReadingPageIndex={maxReadingPageIndex}
           onRead={handleRead}
           onCancel={handleCancel}
           onNext={handleNext}

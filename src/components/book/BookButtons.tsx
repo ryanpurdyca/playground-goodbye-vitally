@@ -11,7 +11,7 @@ import {
 } from "framer-motion";
 import { useEffect, useState } from "react";
 import { Button } from "@/design-system";
-import { MAX_READING_PAGE_INDEX, spreadPageRange } from "./constants";
+import { spreadPageRange } from "./constants";
 import { PageStepper } from "./PageStepper";
 
 export type BookMode = "idle" | "reading";
@@ -24,6 +24,7 @@ type Props = {
   mode: BookMode;
   currentPage: number;
   isMobile: boolean;
+  maxReadingPageIndex: number;
   onRead: () => void;
   onCancel: () => void;
   onNext: () => void;
@@ -37,6 +38,7 @@ export function BookButtons({
   mode,
   currentPage,
   isMobile,
+  maxReadingPageIndex,
   onRead,
   onCancel,
   onNext,
@@ -51,7 +53,7 @@ export function BookButtons({
   });
 
   const isReading = mode === "reading";
-  const isAtEnd = isReading && currentPage >= MAX_READING_PAGE_INDEX;
+  const isAtEnd = isReading && currentPage >= maxReadingPageIndex;
   const showBack = isReading && currentPage > 0;
 
   // Starts at 0 each time reading mode is entered so labels fade in even when

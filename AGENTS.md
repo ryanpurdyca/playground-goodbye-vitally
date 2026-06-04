@@ -365,6 +365,13 @@ When you add a primitive or token, update this section and add it to the design-
 - **Controls on mobile.** Idle: full-width **Open** below the book (`BookButtons`, always visible, not openness-gated). Reading: **Next** / **Back** / **Close** in a row under the closed-book width; no `PageStepper`, no animated page/date labels. Desktop button row, stepper, and labels unchanged.
 - **Trade-off.** Open spread is still `2 × --book-width` (640px); horizontal overflow on narrow phones is a known follow-up.
 
+### 2026-06-04 — Mobile right-page-only reading
+
+- **Problem.** The open spread is ~640px wide; on mobile only the recto is centered in the closed-book footprint, but navigation advanced by **spreads**, so odd faces (versos) were off-screen left and never seen.
+- **Fix.** `bookPagesMobile` in `pages.tsx` interleaves each desktop face with a blank `<PageSurface>` verso, then appends `ThankYouPage` + blank. `Book.tsx` selects `pages = isMobile ? bookPagesMobile : bookPages` and derives `numPages`, `maxReadingPageIndex`, and `insideBackCoverIndex` at runtime (passed to `BookButtons` / `BackCover`). Same open animation and leaf flip; each **Next** shows the next memory on the centered recto.
+- **Polaroid gating on mobile.** `isPolaroidFaceActive`: `bookPageIndex === currentPage` (reading index matches original `bookPages` face index on each recto) or final spread `bookPageIndex === insideBackCoverIndex` on `BackCover`. Reading tap overlays use the centered recto halves (`50vw ± book-width/2`, half-width each).
+- **Desktop unchanged.** `bookPages` + build-time `NUM_PAGES` in `constants.ts` still drive `Page.tsx` / `Cover.tsx` idle fan; only `Book` uses the runtime list.
+
 ## 8. Quality gates
 
 | Command                | What it checks                                            |
