@@ -23,6 +23,22 @@ import {
   SCENE_PERSPECTIVE_PX,
 } from "./constants";
 
+function useIsMobile() {
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    if (typeof window.matchMedia !== "function") return;
+
+    const mq = window.matchMedia("(max-width: 767px)");
+    const update = () => setIsMobile(mq.matches);
+    update();
+    mq.addEventListener("change", update);
+    return () => mq.removeEventListener("change", update);
+  }, []);
+
+  return isMobile;
+}
+
 /**
  * Interactive 3D book. Pointer X drives `openness` (0 = closed, 1 = open)
  * while in idle mode. In reading mode the book is pinned open and Next/Back
@@ -33,6 +49,7 @@ import {
  * without being affected by 3D transforms.
  */
 export function Book() {
+  const isMobile = useIsMobile();
   const openness = useMotionValue(0);
   const smoothOpenness = useSpring(openness, OPENNESS_SPRING);
 
@@ -75,6 +92,8 @@ export function Book() {
   };
 
   useEffect(() => {
+    if (isMobile) return;
+
     const setFromClientX = (clientX: number) => {
       if (modeRef.current === "reading") return; // book is pinned open
       const w = window.innerWidth || 1;
@@ -97,7 +116,7 @@ export function Book() {
       window.removeEventListener("pointermove", onPointerMove);
       window.removeEventListener("touchmove", onTouchMove);
     };
-  }, [openness]);
+  }, [openness, isMobile]);
 
   const applySpreadLabelState = useCallback((index: number, bumpKeys: boolean) => {
     setPolaroidPreviewLabelsPlay(index === 1);
@@ -394,7 +413,7 @@ export function Book() {
             style={{
               width: "var(--book-width)",
               height: "var(--book-height)",
-              left: OPEN_CENTRE_OFFSET,
+              left: isMobile ? "0" : OPEN_CENTRE_OFFSET,
               transformStyle: "preserve-3d",
               rotateX: tiltX,
               rotateZ: tiltZ,
@@ -444,14 +463,16 @@ export function Book() {
           <div
             className="absolute cursor-pointer"
             style={{
-              left: "calc(50vw - var(--book-width))",
+              left: isMobile
+                ? "calc(50vw - var(--book-width) / 2)"
+                : "calc(50vw - var(--book-width))",
               top: "calc(50vh - var(--book-height) / 2)",
-              width: "calc(var(--book-width) * 2)",
+              width: isMobile ? "var(--book-width)" : "calc(var(--book-width) * 2)",
               height: "var(--book-height)",
             }}
             onClick={handleRead}
-            onMouseEnter={() => setHoveringBook(true)}
-            onMouseLeave={() => setHoveringBook(false)}
+            onMouseEnter={() => !isMobile && setHoveringBook(true)}
+            onMouseLeave={() => !isMobile && setHoveringBook(false)}
           />
         )}
 
@@ -462,6 +483,7 @@ export function Book() {
           openness={smoothOpenness}
           mode={mode}
           currentPage={currentPage}
+          isMobile={isMobile}
           onRead={handleRead}
           onCancel={handleCancel}
           onNext={handleNext}
@@ -470,7 +492,9 @@ export function Book() {
           onGoToDisplayPage={goToDisplayPage}
         />
 
-        <CursorFollower openness={smoothOpenness} mode={mode} hoveringBook={hoveringBook} />
+        {!isMobile && (
+          <CursorFollower openness={smoothOpenness} mode={mode} hoveringBook={hoveringBook} />
+        )}
       </div>
     </BookReadingProvider>
   );
