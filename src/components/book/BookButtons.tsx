@@ -11,7 +11,7 @@ import {
 } from "framer-motion";
 import { useEffect, useState } from "react";
 import { Button } from "@/design-system";
-import { NUM_PAGES, READING_PAGE_COUNT, spreadPageRange } from "./constants";
+import { MAX_READING_PAGE_INDEX, spreadPageRange } from "./constants";
 
 export type BookMode = "idle" | "reading";
 
@@ -43,7 +43,7 @@ export function BookButtons({
   });
 
   const isReading = mode === "reading";
-  const isAtBackCover = isReading && currentPage >= NUM_PAGES;
+  const isAtEnd = isReading && currentPage >= MAX_READING_PAGE_INDEX;
   const showBack = isReading && currentPage > 0;
 
   // Starts at 0 each time reading mode is entered so labels fade in even when
@@ -64,10 +64,10 @@ export function BookButtons({
       readingLabelOpacity.set(0);
     }
   }, [isReading, readingLabelOpacity]);
-  const pageWord = isAtBackCover ? "Page" : "Pages";
+  const pageWord = "Pages";
   const spread = spreadPageRange(currentPage);
-  const pageLeft = isAtBackCover ? `${READING_PAGE_COUNT}` : `${spread.left}`;
-  const pageRight = isAtBackCover ? null : `${spread.right}`;
+  const pageLeft = `${spread.left}`;
+  const pageRight = `${spread.right}`;
 
   // Track direction so numbers roll up on Next and down on Back.
   // Render-phase state update: React re-renders immediately, letting us
@@ -120,7 +120,7 @@ export function BookButtons({
       >
         {/* Left group — Next disabled at back cover; Back fades in once past page 0 */}
         <div className="flex items-center gap-2">
-          <Button variant="primary" onClick={isReading ? onNext : onRead} disabled={isAtBackCover}>
+          <Button variant="primary" onClick={isReading ? onNext : onRead} disabled={isAtEnd}>
             {isReading ? "Next" : "Open"}
           </Button>
           <AnimatePresence>
@@ -140,8 +140,8 @@ export function BookButtons({
           </AnimatePresence>
         </div>
 
-        {/* Centered page label — final spread is Pages 19–20 (NYC); one more
-            Next shows Page 20 (inside back cover only). Parent motion.div fades
+        {/* Centered page label — final spread is Pages 21–22 (last verso +
+            inside back cover). Parent motion.div fades
             with openness on close so exit fires at near-zero opacity already. */}
         <AnimatePresence>
           {isReading && (

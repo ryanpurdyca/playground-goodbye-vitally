@@ -14,6 +14,7 @@ import { bookPages } from "./pages";
 import {
   BOOK_HEIGHT_PX,
   BOOK_WIDTH_PX,
+  MAX_READING_PAGE_INDEX,
   NUM_PAGES,
   OPEN_CENTRE_OFFSET,
   OPENNESS_SPRING,
@@ -98,7 +99,7 @@ export function Book() {
 
   const goToNextPage = useCallback(() => {
     const from = currentPageRef.current;
-    const to = Math.min(from + 1, NUM_PAGES);
+    const to = Math.min(from + 1, MAX_READING_PAGE_INDEX);
     if (from === 0 && to === 1) {
       setPolaroidPreviewLabelsPlay(true);
       setPolaroidPreviewLabelsKey((k) => k + 1);
@@ -284,13 +285,13 @@ export function Book() {
           } else {
             handleCloseRef.current();
           }
-        } else if (currentPageRef.current < NUM_PAGES) {
+        } else if (currentPageRef.current < MAX_READING_PAGE_INDEX) {
           goToNextPage();
         }
       },
       onRightPagePointer: () => setHoveredSide("right"),
       onRightPageClick: () => {
-        if (currentPageRef.current < NUM_PAGES) {
+        if (currentPageRef.current < MAX_READING_PAGE_INDEX) {
           goToNextPage();
         }
       },
@@ -365,7 +366,7 @@ export function Book() {
                 width: "var(--book-width)",
                 height: "var(--book-height)",
               }}
-              onClick={currentPage < NUM_PAGES ? handleNext : undefined}
+              onClick={currentPage < MAX_READING_PAGE_INDEX ? handleNext : undefined}
               onMouseEnter={() => setHoveredSide("right")}
               onMouseLeave={() => setHoveredSide(null)}
             />

@@ -328,8 +328,8 @@ When you add a primitive or token, update this section and add it to the design-
 - **Display pages 11–13 (`bookPages[9]`–`[11]`)** — `SummerOffsitePage11` … `SummerOffsitePage13`; `SummerOffsitePageLabels` on page 11.
 - **Display pages 14–15 (`bookPages[12]`–`[13]`)** — `LeadershipOffsitePage14` / `LeadershipOffsitePage15`; `LeadershipOffsitePageLabels` on page 14.
 - **Display pages 16–18 (`bookPages[14]`–`[16]`)** — `AutocampOffsitePage16` … `AutocampOffsitePage18`; `AutocampOffsitePageLabels` on page 16.
-- **Display pages 19–20 (`bookPages[17]`–`[18]`)** — `NycHolidayOffsitePage19` / `NycHolidayOffsitePage20`; `NycHolidayOffsitePageLabels` on page 19. Page **20** = inside back cover.
-- **Page count (reading UI).** `READING_PAGE_COUNT = bookPages.length + 1` in `constants.ts` — page **1** is the inside front cover; each `bookPages[i]` face is display page **`i + 2`**. Spread labels are non-overlapping **Pages 1–2**, **3–4**, … via `spreadPageRange(currentPage)`; penultimate **Pages 19–20** (NYC); final Next **Page 20** (inside back cover). Odd face counts use `BackCoverInsidePage` on the last sheet verso.
+- **Display pages 19–20 (`bookPages[17]`–`[18]`)** — `NycHolidayOffsitePage19` / `NycHolidayOffsitePage20`; `NycHolidayOffsitePageLabels` on page 19. Page **21** = last-sheet verso; page **22** = inside back cover.
+- **Page count (reading UI).** Page **1** = inside front cover; `bookPages[i]` = page **`i + 2`**; page **`length + 2`** = last-sheet verso (`BackCoverInsidePage`); page **`length + 3`** = inside back cover (`READING_PAGE_COUNT`). Spreads **Pages 1–2** … **21–22** (final spread = verso + back). `MAX_READING_PAGE_INDEX = NUM_PAGES`.
 
 ### 2026-06-03 — Polaroid View cursor: direct tracking + lightbox gate
 
