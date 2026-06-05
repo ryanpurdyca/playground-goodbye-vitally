@@ -11,7 +11,12 @@ import {
 } from "framer-motion";
 import { useEffect, useState } from "react";
 import { Button } from "@/design-system";
-import { MOBILE_BUTTON_ROW_TOP, spreadPageRange } from "./constants";
+import {
+  DESKTOP_BUTTON_ROW_TOP,
+  DESKTOP_READING_LABEL_TOP,
+  MOBILE_BUTTON_ROW_TOP,
+  spreadPageRange,
+} from "./constants";
 import { PageStepper } from "./PageStepper";
 
 export type BookMode = "idle" | "reading";
@@ -100,7 +105,7 @@ export function BookButtons({
             style={{
               opacity: labelOpacity,
               right: "calc(50vw - var(--book-width))",
-              top: "calc(50vh - var(--book-height) / 2 - 56px)",
+              top: DESKTOP_READING_LABEL_TOP,
             }}
           >
             2022-2026
@@ -111,7 +116,7 @@ export function BookButtons({
             style={{
               opacity: labelOpacity,
               left: "calc(50vw - var(--book-width))",
-              top: "calc(50vh - var(--book-height) / 2 - 56px)",
+              top: DESKTOP_READING_LABEL_TOP,
             }}
           >
             <span>{pageWord}&nbsp;</span>
@@ -181,7 +186,7 @@ export function BookButtons({
           className="absolute flex items-center justify-between"
           style={{
             left: "calc(50vw - var(--book-width))",
-            top: "calc(50vh + var(--book-height) / 2 + 52px)",
+            top: DESKTOP_BUTTON_ROW_TOP,
             width: "calc(var(--book-width) * 2)",
             opacity: openness,
             pointerEvents: interactive ? "auto" : "none",
